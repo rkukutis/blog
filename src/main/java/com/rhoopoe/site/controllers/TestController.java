@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @RestController
@@ -44,7 +45,7 @@ public class TestController {
         Post post = PostMapper.dtoToEntity(postDTO);
         Post createdPost = postService.createPost(post);
         if (createdPost == null){
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }
@@ -58,8 +59,13 @@ public class TestController {
         return new ResponseEntity<>(updatedPost, HttpStatus.ACCEPTED);
     }
     @DeleteMapping("{uuid}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletePost(@PathVariable UUID uuid){
+    public ResponseEntity<String> deletePost(@PathVariable UUID uuid){
         postService.deletePost(uuid);
+        try {
+            postService.getPostById(uuid);
+        } catch (NoSuchElementException e){
+            return new ResponseEntity<>("Post deleted", HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<>("Could not delete post", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -17,9 +19,13 @@ public class PostService {
         this.postRepository = postRepository;
     }
 
+    public Post getPostById(UUID postUUID){
+        Optional<Post> post = postRepository.findById(postUUID);
+         return post.orElseThrow(() -> new NoSuchElementException("Post " + postUUID.toString() + " not found"));
+    }
+
     public Page<Post> getAllPosts(PageRequest pageRequest){
-        Page<Post> postPage = postRepository.findAll(pageRequest);
-        return postPage;
+        return postRepository.findAll(pageRequest);
     }
     public Post createPost(Post post){
         if (postRepository.exists(Example.of(post))){
