@@ -24,7 +24,10 @@ public class PostService {
          return post.orElseThrow(() -> new NoSuchElementException("Post " + postUUID.toString() + " not found"));
     }
 
-    public Page<Post> getAllPosts(PageRequest pageRequest){
+    public Page<Post> getAllPosts(PageRequest pageRequest, String contains){
+        if (contains != null){
+            return postRepository.findByTitleContainingIgnoreCase(contains, pageRequest);
+        }
         return postRepository.findAll(pageRequest);
     }
     public Post createPost(Post post){

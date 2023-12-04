@@ -7,10 +7,13 @@ import com.rhoopoe.site.mappers.PostMapper;
 import com.rhoopoe.site.services.PostService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -29,15 +32,21 @@ public class TestController {
 
     @GetMapping
     public ResponseEntity<Page<Post>> getAllPosts(@RequestParam(defaultValue = "1") Integer page,
-                                                  @RequestParam(defaultValue = "10") Integer limit){
+                                                  @RequestParam(defaultValue = "10") Integer limit,
+                                                  @RequestParam(defaultValue = "createdAt") String sortBy,
+                                                  @RequestParam(defaultValue = "false") String sortDesc,
+                                                  @RequestParam(required = false) String contains){
         if (page < 1 || limit < 0) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
+        if (!sortDesc.equals("true") && !sortDesc.equals("false")){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
         page--;
-        System.out.println(page);
-        System.out.println(limit);
-        PageRequest pageRequest = PageRequest.of(page, limit);
-        return new ResponseEntity<>(postService.getAllPosts(pageRequest), HttpStatus.OK);
+        Direction direction = Boolean.parseBoolean(sortDesc) ? Direction.DESC : Direction.ASC;
+        Sort sort = Sort.by(direction, sortBy);
+        PageRequest pageRequest = PageRequest.of(page, limit, sort);
+        return new ResponseEntity<>(postService.getAllPosts(pageRequest, contains), HttpStatus.OK);
     }
 
     @PostMapping
