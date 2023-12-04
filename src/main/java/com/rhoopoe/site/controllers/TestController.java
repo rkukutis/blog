@@ -64,7 +64,7 @@ public class TestController {
         try {
             postService.getPostById(uuid);
         } catch (NoSuchElementException e){
-            return new ResponseEntity<>("Post deleted", HttpStatus.ACCEPTED);
+            return new ResponseEntity<>("Post deleted", HttpStatus.OK);
         }
         return new ResponseEntity<>("Could not delete post", HttpStatus.INTERNAL_SERVER_ERROR);
     }

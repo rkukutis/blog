@@ -20,7 +20,7 @@ public class Post{
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
     private String title;
-    @Column(length = 100000)
+    @Column(columnDefinition = "TEXT")
     private String body;
     @Column(name = "image")
     private String imageUrl;
