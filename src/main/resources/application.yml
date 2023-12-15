@@ -1,0 +1,21 @@
+logging:
+    level:
+        org:
+            springframework:
+                security: TRACE
+server:
+    error:
+        include-message: always
+spring:
+    datasource:
+        password: jIOHohfdoiHIAD445_jds#LLd
+        url: jdbc:postgresql://localhost:5432/personal_site
+        username: rhoopoe
+    jpa:
+        hibernate:
+            ddl-auto: create-drop
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+                format_sql: true
+        show-sql: true
