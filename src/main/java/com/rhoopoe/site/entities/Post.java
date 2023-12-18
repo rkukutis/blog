@@ -4,6 +4,8 @@ package com.rhoopoe.site.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
 import java.util.Objects;
@@ -12,6 +14,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "posts")
 @NoArgsConstructor
+@RequiredArgsConstructor
 @Data
 public class Post{
 
@@ -19,20 +22,17 @@ public class Post{
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
+    @NonNull
     private String title;
     @Column(columnDefinition = "TEXT")
+    @NonNull
     private String body;
     @Column(name = "image")
+    @NonNull
     private String imageUrl;
     @Column(name = "created_at")
     private Date createdAt;
 
-
-    public Post(String title, String body, String imageUrl) {
-        this.title = title;
-        this.body = body;
-        this.imageUrl = imageUrl;
-    }
 
     @PrePersist
     public void logCreatedAt(){
