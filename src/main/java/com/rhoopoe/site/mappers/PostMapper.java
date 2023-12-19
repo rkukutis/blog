@@ -12,7 +12,7 @@ public class PostMapper{
         post.setImageUrl("default.jpg");
         return post;
     }
-    public static PostDTO dtoToEntity(Post post){
+    public static PostDTO EntitytoDTO(Post post){
         PostDTO postDTO = new PostDTO();
         postDTO.setBody(post.getBody());
         postDTO.setTitle(post.getTitle());

@@ -2,10 +2,7 @@ package com.rhoopoe.site.entities;
 
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 import java.util.Objects;
@@ -13,23 +10,30 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "posts")
+@Getter
 @NoArgsConstructor
 @RequiredArgsConstructor
-@Data
 public class Post{
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
+
     @NonNull
+    @Setter
     private String title;
+
     @Column(columnDefinition = "TEXT")
     @NonNull
+    @Setter
     private String body;
+
     @Column(name = "image")
     @NonNull
+    @Setter
     private String imageUrl;
+
     @Column(name = "created_at")
     private Date createdAt;
 

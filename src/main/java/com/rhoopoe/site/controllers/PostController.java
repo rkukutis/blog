@@ -13,22 +13,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("posts")
-public class TestController {
+public class PostController {
     private final PostService postService;
 
-    public TestController(PostService postService) {
+    public PostController(PostService postService) {
         this.postService = postService;
     }
 
-    @GetMapping("test")
-    public ResponseEntity<String> hello(){
-        return new ResponseEntity<>("It works!",HttpStatus.ACCEPTED);
-    }
 
     @GetMapping
     public ResponseEntity<Page<Post>> getAllPosts(@RequestParam(defaultValue = "1") Integer page,
