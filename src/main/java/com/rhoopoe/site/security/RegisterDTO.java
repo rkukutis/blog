@@ -1,15 +1,16 @@
-package com.rhoopoe.site.DTOs;
+package com.rhoopoe.site.security;
+
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
-@ToString
-public class LoginDTO {
+@NoArgsConstructor
+public class RegisterDTO {
     private String username;
     private String password;
 }
