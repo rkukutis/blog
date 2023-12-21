@@ -2,6 +2,7 @@ package com.rhoopoe.site.configuration;
 
 import com.rhoopoe.site.security.AuthenticationService;
 import com.rhoopoe.site.security.RegisterDTO;
+import com.rhoopoe.site.security.user.Role;
 import com.rhoopoe.site.security.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -16,7 +17,10 @@ public class InitialConfig {
     @Bean
     CommandLineRunner initialize(){
         return args -> {
-                authenticationService.register(new RegisterDTO("rhoopoe", "kukutis"));
+            if (userRepository.findByUsername("rhoopoe").isEmpty()){
+                authenticationService.register(new RegisterDTO("rhoopoe", "ateitiesprofesionalas"));
+                userRepository.findByUsername("rhoopoe").get().setRole(Role.ADMIN);
+            }
         };
     }
 }
