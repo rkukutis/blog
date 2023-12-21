@@ -1,36 +1,39 @@
 package com.rhoopoe.site.configuration;
 
-import com.rhoopoe.site.entities.Post;
-import com.rhoopoe.site.repositories.PostRepository;
-import com.rhoopoe.site.security.AuthUser;
-import com.rhoopoe.site.security.AuthUserRepository;
-import org.springframework.boot.CommandLineRunner;
+import com.rhoopoe.site.security.user.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
+@RequiredArgsConstructor
 public class ApplicationConfig {
-    private final PostRepository postRepository;
-    private final AuthUserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
 
-    public ApplicationConfig(PostRepository postRepository,
-                             AuthUserRepository userRepository,
-                             BCryptPasswordEncoder passwordEncoder) {
-        this.postRepository = postRepository;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
+
+    @Bean
+    public AuthenticationProvider authenticationProvider(){
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
     }
 
     @Bean
-    CommandLineRunner initialize(){
-      return args -> {
-          postRepository.save(new Post("test post 1", "LOREM IPSUM", "IMAGE1"));
-          postRepository.save(new Post("test post 2", "LOREM IPSUM", "IMAGE2"));
-          postRepository.save(new Post("test post 3", "LOREM IPSUM", "IMAGE3"));
-
-          userRepository.save(new AuthUser("rhoopoe", passwordEncoder.encode("ateitiesprofesionalai")));
-      };
+    public UserDetailsService userDetailsService(){
+        return username -> userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
+
 }

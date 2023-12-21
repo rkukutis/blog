@@ -11,11 +11,13 @@ spring:
         password: jIOHohfdoiHIAD445_jds#LLd
         url: jdbc:postgresql://localhost:5432/personal_site
         username: rhoopoe
+        driver-class-name: org.postgresql.Driver
     jpa:
         hibernate:
-            ddl-auto: create-drop
+            ddl-auto: update
         properties:
             hibernate:
-                dialect: org.hibernate.dialect.PostgreSQLDialect
                 format_sql: true
         show-sql: true
+        database: postgresql
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
