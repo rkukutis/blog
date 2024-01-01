@@ -34,6 +34,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable).authorizeHttpRequests(authorize ->
                 authorize.requestMatchers("/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET,"uploads/images/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "posts").permitAll()
                         .requestMatchers(HttpMethod.POST, "messages").permitAll()
                         .anyRequest().authenticated())
