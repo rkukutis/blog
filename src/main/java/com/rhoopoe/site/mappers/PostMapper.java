@@ -2,6 +2,7 @@ package com.rhoopoe.site.mappers;
 
 import com.rhoopoe.site.DTOs.PostDTO;
 import com.rhoopoe.site.entities.Post;
+import com.rhoopoe.site.utils.ImageFileStorage;
 
 import java.util.Base64;
 
@@ -11,15 +12,8 @@ public class PostMapper{
         Post post = new Post();
         post.setBody(postDTO.getBody());
         post.setTitle(postDTO.getTitle());
-        post.setThumbnail(Base64.getDecoder().decode(postDTO.getThumbnailBase64()));
+        // Thumbnail is null for now
         return post;
-    }
-    public static PostDTO EntitytoDTO(Post post){
-        PostDTO postDTO = new PostDTO();
-        postDTO.setBody(post.getBody());
-        postDTO.setTitle(post.getTitle());
-        postDTO.setThumbnailBase64(new String(Base64.getEncoder().encode(post.getThumbnail())));
-        return postDTO;
     }
 
 }

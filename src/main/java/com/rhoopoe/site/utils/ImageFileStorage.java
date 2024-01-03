@@ -7,12 +7,13 @@ import java.nio.file.Path;
 public class ImageFileStorage {
     private static final String root = "src/main/resources";
 
-    public static void storeThumbnail(byte[] bytes, String fileName) throws IOException {
+    public static String storeThumbnail(byte[] bytes, String fileName) throws IOException {
         String path = root + "/images/thumbnails/" + fileName;
         File file = new File(path);
         try (OutputStream outputStream = new FileOutputStream(file)) {
             outputStream.write(bytes);
         }
+        return "http://localhost:8080/uploads/images/thumbnails/" + fileName;
     }
     public static byte[] retrieveThumbnail(String fileName){
         byte[] bytes = null;

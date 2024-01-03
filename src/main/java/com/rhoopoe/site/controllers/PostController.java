@@ -12,6 +12,8 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Base64;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -47,7 +49,8 @@ public class PostController {
     @PostMapping
     public ResponseEntity<Post> createPost(@RequestBody PostDTO postDTO){
         Post post = PostMapper.dtoToEntity(postDTO);
-        Post createdPost = postService.createPost(post);
+        byte[] thumbnailBytes = Base64.getDecoder().decode(postDTO.getThumbnailBase64());
+        Post createdPost = postService.createPost(post, thumbnailBytes);
         if (createdPost == null){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }

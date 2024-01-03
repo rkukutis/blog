@@ -32,23 +32,22 @@ public class PostService {
         }
         return postRepository.findAll(pageRequest);
     }
-    public Post createPost(Post post){
-        byte[] processedThumbnail = null;
-        try {
-            processedThumbnail = new ImageProcessing(post.getThumbnail())
-                    .squareCropCenterWidth()
-                    .resize(100,100)
-                    .toByteArray();
-        } catch (IOException exception) {
-            // TODO: get default thumbnail image
-            processedThumbnail = new byte[0];
-        }
-        post.setThumbnail(processedThumbnail);
+    public Post createPost(Post post, byte[] thumbnail){
+        // 1) save post without thumbnail
         Post savedPost = postRepository.save(post);
+        // 2) process thumbnail
+        String thumbnailPath = null;
         try {
-            String fileName = savedPost.getUuid().toString() + ".jpg";
-            ImageFileStorage.storeThumbnail(processedThumbnail, fileName);
-        } catch (IOException ignored) {}
+            byte[] processedThumbnail = new ImageProcessing(thumbnail)
+                    .squareCropCenterWidth()
+                    .resize(200,200)
+                    .toByteArray();
+            thumbnailPath = ImageFileStorage.storeThumbnail(processedThumbnail,
+                    savedPost.getUuid().toString() + ".png");
+        } catch (IOException exception) {
+            throw new RuntimeException("Error occurred while processing thumbnail");
+        }
+        savedPost.setThumbnail(thumbnailPath);
         return savedPost;
     }
     public Post updatePost(Post updatedPost, UUID postUUID){

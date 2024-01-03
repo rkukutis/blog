@@ -31,7 +31,7 @@ public class Post{
 
     @Column(name = "thumbnail_image")
     @Setter
-    private byte[] thumbnail;
+    private String thumbnail;
 
     @Column(name = "created_at")
     private Date createdAt;
