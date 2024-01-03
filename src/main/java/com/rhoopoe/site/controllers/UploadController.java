@@ -2,16 +2,13 @@ package com.rhoopoe.site.controllers;
 
 import com.rhoopoe.site.entities.PostImage;
 import com.rhoopoe.site.services.ImageStorageService;
+import com.rhoopoe.site.utils.ImageFileStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 
 @RestController
 @RequestMapping("uploads")
@@ -33,6 +30,17 @@ public class UploadController {
         MediaType mediaType = MediaType.IMAGE_JPEG;
         try {
             byte[] data = imageStorage.retrieve(imageName);
+            return ResponseEntity.ok().contentType(mediaType).body(data);
+        } catch (Exception exception) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping(path = "images/thumbnails/{imageName}")
+    public ResponseEntity<byte[]> getImageFromFileSystem(@PathVariable String imageName) {
+        MediaType mediaType = MediaType.IMAGE_JPEG;
+        try {
+//            byte[] data = imageStorage.retrieve(imageName);
+            byte[] data = ImageFileStorage.retrieveThumbnail(imageName);
             return ResponseEntity.ok().contentType(mediaType).body(data);
         } catch (Exception exception) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
