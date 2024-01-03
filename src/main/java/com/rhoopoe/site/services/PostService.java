@@ -2,11 +2,14 @@ package com.rhoopoe.site.services;
 
 import com.rhoopoe.site.entities.Post;
 import com.rhoopoe.site.repositories.PostRepository;
+import com.rhoopoe.site.utils.ImageProcessing;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,8 +34,15 @@ public class PostService {
         return postRepository.findAll(pageRequest);
     }
     public Post createPost(Post post){
-        if (postRepository.exists(Example.of(post))){
-            return null;
+        try {
+            byte[] processedImage = new ImageProcessing(post.getThumbnail())
+                    .squareCropCenterWidth()
+                    .resize(100,100)
+                    .toByteArray();
+            post.setThumbnail(processedImage);
+        } catch (IOException exception) {
+            // TODO: get default thumbnail image
+            post.setThumbnail(new byte[0]);
         }
         return postRepository.save(post);
     }

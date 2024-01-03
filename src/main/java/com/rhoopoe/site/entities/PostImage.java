@@ -9,19 +9,19 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Image {
+public class PostImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
     private String imageName;
-    private byte[] data;
+    private byte[] bytes;
     @CreatedDate
     private Date uploadedAt;
 
-    public Image(String imageName, byte[] data) {
+    public PostImage(String imageName, byte[] bytes) {
         this.imageName = imageName;
-        this.data = data;
+        this.bytes = bytes;
     }
 
     @PrePersist

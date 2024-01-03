@@ -29,14 +29,12 @@ public class Post{
     @Setter
     private String body;
 
-    @Column(name = "image")
-    @NonNull
+    @Column(name = "thumbnail_image")
     @Setter
-    private String imageUrl;
+    private byte[] thumbnail;
 
     @Column(name = "created_at")
     private Date createdAt;
-
 
     @PrePersist
     public void logCreatedAt(){
@@ -47,11 +45,11 @@ public class Post{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Post post)) return false;
-        return Objects.equals(title, post.title) && Objects.equals(body, post.body) && Objects.equals(imageUrl, post.imageUrl);
+        return Objects.equals(title, post.title) && Objects.equals(body, post.body);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, body, imageUrl);
+        return Objects.hash(title, body);
     }
 }
