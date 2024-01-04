@@ -2,8 +2,9 @@ package com.rhoopoe.site.services;
 
 import com.rhoopoe.site.entities.Post;
 import com.rhoopoe.site.repositories.PostRepository;
-import com.rhoopoe.site.utils.ImageFileStorage;
+import com.rhoopoe.site.utils.image_file_storage.ThumbnailFileStorageService;
 import com.rhoopoe.site.utils.ImageProcessing;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -14,12 +15,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-
-    public PostService(PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
+    private final ThumbnailFileStorageService thumbnailFileStorageService;
 
     public Post getPostById(UUID postUUID){
         Optional<Post> post = postRepository.findById(postUUID);
@@ -42,7 +41,7 @@ public class PostService {
                     .squareCropCenterWidth()
                     .resize(200,200)
                     .toByteArray();
-            thumbnailPath = ImageFileStorage.storeThumbnail(processedThumbnail,
+            thumbnailPath = thumbnailFileStorageService.store(processedThumbnail,
                     savedPost.getUuid().toString() + ".png");
         } catch (IOException exception) {
             throw new RuntimeException("Error occurred while processing thumbnail");

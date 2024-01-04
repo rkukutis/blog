@@ -1,8 +1,8 @@
 package com.rhoopoe.site.controllers;
 
 import com.rhoopoe.site.entities.PostImage;
-import com.rhoopoe.site.services.ImageStorageService;
-import com.rhoopoe.site.utils.ImageFileStorage;
+import com.rhoopoe.site.services.PostImageService;
+import com.rhoopoe.site.utils.image_file_storage.ThumbnailFileStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,13 +14,14 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("uploads")
 @RequiredArgsConstructor
 public class UploadController {
-    private final ImageStorageService imageStorage;
+    private final PostImageService postImageService;
+    private final ThumbnailFileStorageService thumbnailFileStorageService;
 
     @PostMapping(path = "images", headers={"content-type=multipart/form-data"}, consumes = "image/*")
-    public ResponseEntity<String> uploadImage(@RequestParam MultipartFile file) {
+    public ResponseEntity<String> uploadImage(@RequestParam MultipartFile image) {
         try{
-            PostImage uploadedPostImage = imageStorage.store(file.getOriginalFilename(), file.getBytes());
-            return new ResponseEntity<>(uploadedPostImage.getImageName(), HttpStatus.OK);
+            PostImage uploadedPostImage = postImageService.store(image.getBytes(), image.getOriginalFilename());
+            return new ResponseEntity<String>(uploadedPostImage.getPath(), HttpStatus.OK);
         } catch (Exception exception) {
             return new ResponseEntity<>("Could not upload image. Try again later", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -29,7 +30,7 @@ public class UploadController {
     public ResponseEntity<byte[]> getImage(@PathVariable String imageName) {
         MediaType mediaType = MediaType.IMAGE_JPEG;
         try {
-            byte[] data = imageStorage.retrieve(imageName);
+            byte[] data = postImageService.retrieve(imageName);
             return ResponseEntity.ok().contentType(mediaType).body(data);
         } catch (Exception exception) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -40,7 +41,7 @@ public class UploadController {
         MediaType mediaType = MediaType.IMAGE_JPEG;
         try {
 //            byte[] data = imageStorage.retrieve(imageName);
-            byte[] data = ImageFileStorage.retrieveThumbnail(imageName);
+            byte[] data = thumbnailFileStorageService.retrieve(imageName);
             return ResponseEntity.ok().contentType(mediaType).body(data);
         } catch (Exception exception) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);

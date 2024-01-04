@@ -14,19 +14,16 @@ public class PostImage {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
+    @Setter
     private String imageName;
-    private byte[] bytes;
+    @Setter
+    private String path;
     @CreatedDate
     private Date uploadedAt;
 
-    public PostImage(String imageName, byte[] bytes) {
-        this.imageName = imageName;
-        this.bytes = bytes;
-    }
 
     @PrePersist
     public  void logDate(){
         this.uploadedAt = new Date();
-        this.imageName = uploadedAt.toInstant().getEpochSecond() + "_" + this.imageName;
     }
 }
