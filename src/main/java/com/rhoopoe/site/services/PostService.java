@@ -35,7 +35,7 @@ public class PostService {
         // 1) save post without thumbnail
         Post savedPost = postRepository.save(post);
         // 2) process thumbnail
-        String thumbnailPath = null;
+        String thumbnailPath = "hello";
         try {
             byte[] processedThumbnail = new ImageProcessing(thumbnail)
                     .squareCropCenterWidth()
@@ -46,8 +46,9 @@ public class PostService {
         } catch (IOException exception) {
             throw new RuntimeException("Error occurred while processing thumbnail");
         }
+        // 3) update saved post with path to thumbnail
         savedPost.setThumbnail(thumbnailPath);
-        return savedPost;
+        return postRepository.save(savedPost);
     }
     public Post updatePost(Post updatedPost, UUID postUUID){
         Post postToBeUpdated = postRepository.getReferenceById(postUUID);

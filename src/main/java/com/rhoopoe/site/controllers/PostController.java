@@ -19,6 +19,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("posts")
+@CrossOrigin(value = "http://localhost:5173")
 public class PostController {
     private final PostService postService;
 
