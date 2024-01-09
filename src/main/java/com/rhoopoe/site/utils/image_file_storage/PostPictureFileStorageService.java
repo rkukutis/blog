@@ -1,6 +1,7 @@
 package com.rhoopoe.site.utils.image_file_storage;
 
 import com.rhoopoe.site.utils.ImageProcessing;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -11,25 +12,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Service
+@Slf4j
 public class PostPictureFileStorageService implements  ImageFileStorageService{
     private final String postImagePath = "/images/post-pictures/";
 
     public String store(byte[] imageBytes, String imageName) throws IOException {
         BufferedImage image = new ImageProcessing(imageBytes).toImage();
-        String path = root + postImagePath + imageName;
+        String path = ROOT + postImagePath + imageName;
         File file = new File(path);
         ImageIO.write(image, "png", file);
-        return host + "/uploads/images/" + imageName;
+        return HOST + "/uploads/images/" + imageName;
     }
-    public byte[] retrieve(String fileName){
-        byte[] bytes = null;
-        try {
-            Path path = Path.of(root + postImagePath + fileName);
-            bytes = Files.readAllBytes(path);
-        } catch (IOException exception){
-            // TODO: Add default post picture
-            bytes = new byte[0];
-        }
-        return bytes;
+    public byte[] retrieve(String fileName) throws IOException{
+        Path path = Path.of(ROOT + postImagePath + fileName);
+        return Files.readAllBytes(path);
     }
 }

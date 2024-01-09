@@ -1,6 +1,7 @@
 package com.rhoopoe.site.utils.image_file_storage;
 
 import com.rhoopoe.site.utils.ImageProcessing;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -9,26 +10,25 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@Slf4j
 @Service
 public class ThumbnailFileStorageService implements ImageFileStorageService {
     private final String thumbnailPath = "/images/thumbnails/";
 
-    public String store(byte[] imageBytes, String imageName) throws IOException {
+    public String store(byte[] imageBytes, String imageName) throws IOException  {
+        String path = ROOT + thumbnailPath + imageName;
+        try {
         BufferedImage image = new ImageProcessing(imageBytes).toImage();
-        String path = root + thumbnailPath + imageName;
         File file = new File(path);
         ImageIO.write(image, "png", file);
-        return host + "/uploads/images/thumbnails/" + imageName;
-    }
-    public byte[] retrieve(String fileName){
-        byte[] bytes = null;
-        try {
-            Path path = Path.of(root + thumbnailPath + fileName);
-            bytes = Files.readAllBytes(path);
         } catch (IOException exception){
-            // TODO: Add default thumbnail
-            bytes = new byte[0];
+            log.error(path,"Could not write thumbnail to %s");
+            throw exception;
         }
-        return bytes;
+        return HOST + "/uploads/images/thumbnails/" + imageName;
+    }
+    public byte[] retrieve(String fileName) throws IOException {
+        Path path = Path.of(ROOT + thumbnailPath + fileName);
+        return Files.readAllBytes(path);
     }
 }

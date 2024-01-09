@@ -40,19 +40,4 @@ class PostServiceTest {
                 savedPost.getThumbnail());
     }
 
-    @Test
-    void getAllPosts() {
-    }
-
-    @Test
-    void createPost() {
-    }
-
-    @Test
-    void updatePost() {
-    }
-
-    @Test
-    void deletePost() {
-    }
 }

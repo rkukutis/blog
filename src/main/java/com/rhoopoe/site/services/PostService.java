@@ -5,6 +5,7 @@ import com.rhoopoe.site.repositories.PostRepository;
 import com.rhoopoe.site.utils.image_file_storage.ThumbnailFileStorageService;
 import com.rhoopoe.site.utils.ImageProcessing;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
@@ -31,23 +33,19 @@ public class PostService {
         }
         return postRepository.findAll(pageRequest);
     }
-    public Post createPost(Post post, byte[] thumbnail){
+    public Post createPost(Post post, byte[] thumbnail) throws IOException{
         // 1) save post without thumbnail
         Post savedPost = postRepository.save(post);
         // 2) process thumbnail
-        String thumbnailPath = "hello";
-        try {
-            byte[] processedThumbnail = new ImageProcessing(thumbnail)
-                    .squareCropCenterWidth()
-                    .resize(200,200)
-                    .toByteArray();
-            thumbnailPath = thumbnailFileStorageService.store(processedThumbnail,
-                    savedPost.getUuid().toString() + ".png");
-        } catch (IOException exception) {
-            throw new RuntimeException("Error occurred while processing thumbnail");
-        }
+        StringBuilder thumbnailPath = new StringBuilder();
+        byte[] processedThumbnail = new ImageProcessing(thumbnail)
+                .squareCropCenterWidth()
+                .resize(200,200)
+                .toByteArray();
+        thumbnailPath.append(thumbnailFileStorageService.store(processedThumbnail,
+                    savedPost.getUuid().toString() + ".png"));
         // 3) update saved post with path to thumbnail
-        savedPost.setThumbnail(thumbnailPath);
+        savedPost.setThumbnail(thumbnailPath.toString());
         return postRepository.save(savedPost);
     }
     public Post updatePost(Post updatedPost, UUID postUUID){

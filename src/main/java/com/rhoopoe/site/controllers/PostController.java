@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.Base64;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -48,7 +49,7 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody PostDTO postDTO){
+    public ResponseEntity<Post> createPost(@RequestBody PostDTO postDTO) throws IOException {
         Post post = PostMapper.dtoToEntity(postDTO);
         byte[] thumbnailBytes = Base64.getDecoder().decode(postDTO.getThumbnailBase64());
         Post createdPost = postService.createPost(post, thumbnailBytes);

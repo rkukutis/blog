@@ -14,7 +14,7 @@ public class PostImageService {
     private final ImageRepository imageRepository;
     private final PostPictureFileStorageService postPictureFileStorageService;
 
-    public PostImage store(byte[] imageBytes, String originalName) throws IOException {
+    public PostImage store(byte[] imageBytes) throws IOException {
         PostImage postImage = new PostImage();
         PostImage savedImage =  imageRepository.save(postImage);
         String storedName = savedImage.getUuid().toString() + ".png";
@@ -23,7 +23,7 @@ public class PostImageService {
         savedImage.setPath(path);
         return savedImage;
     }
-    public byte[] retrieve(String imageName) {
+    public byte[] retrieve(String imageName) throws IOException {
         return postPictureFileStorageService.retrieve(imageName);
     }
 }

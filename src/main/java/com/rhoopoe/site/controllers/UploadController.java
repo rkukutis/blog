@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("uploads")
 @RequiredArgsConstructor
@@ -20,31 +22,26 @@ public class UploadController {
     @PostMapping(path = "images", headers={"content-type=multipart/form-data"}, consumes = "image/*")
     public ResponseEntity<String> uploadImage(@RequestParam MultipartFile image) {
         try{
-            PostImage uploadedPostImage = postImageService.store(image.getBytes(), image.getOriginalFilename());
+            PostImage uploadedPostImage = postImageService.store(image.getBytes());
             return new ResponseEntity<String>(uploadedPostImage.getPath(), HttpStatus.OK);
         } catch (Exception exception) {
             return new ResponseEntity<>("Could not upload image. Try again later", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @GetMapping(path = "images/{imageName}")
-    public ResponseEntity<byte[]> getImage(@PathVariable String imageName) {
+    public ResponseEntity<byte[]> getImage(@PathVariable String imageName) throws IOException {
         MediaType mediaType = MediaType.IMAGE_JPEG;
-        try {
-            byte[] data = postImageService.retrieve(imageName);
-            return ResponseEntity.ok().contentType(mediaType).body(data);
-        } catch (Exception exception) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        byte[] data = postImageService.retrieve(imageName);
+        return ResponseEntity.ok().contentType(mediaType).body(data);
     }
     @GetMapping(path = "images/thumbnails/{imageName}")
     public ResponseEntity<byte[]> getImageFromFileSystem(@PathVariable String imageName) {
         MediaType mediaType = MediaType.IMAGE_JPEG;
         try {
-//            byte[] data = imageStorage.retrieve(imageName);
             byte[] data = thumbnailFileStorageService.retrieve(imageName);
             return ResponseEntity.ok().contentType(mediaType).body(data);
         } catch (Exception exception) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>( null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
