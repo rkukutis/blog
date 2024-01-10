@@ -5,6 +5,7 @@ import com.rhoopoe.site.DTOs.PostDTO;
 import com.rhoopoe.site.entities.Post;
 import com.rhoopoe.site.mappers.PostMapper;
 import com.rhoopoe.site.services.PostService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -20,14 +21,15 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("posts")
+@RequiredArgsConstructor
 @CrossOrigin(value = "http://localhost:5173")
 public class PostController {
     private final PostService postService;
-
-    public PostController(PostService postService) {
-        this.postService = postService;
+    @GetMapping("{uuid}")
+    public ResponseEntity<Post> getPostById(@PathVariable UUID uuid){
+        Post post = postService.getPostById(uuid);
+        return ResponseEntity.ok().body(post);
     }
-
 
     @GetMapping
     public ResponseEntity<Page<Post>> getAllPosts(@RequestParam(defaultValue = "1") Integer page,
@@ -47,7 +49,6 @@ public class PostController {
         PageRequest pageRequest = PageRequest.of(page, limit, sort);
         return new ResponseEntity<>(postService.getAllPosts(pageRequest, contains), HttpStatus.OK);
     }
-
     @PostMapping
     public ResponseEntity<Post> createPost(@RequestBody PostDTO postDTO) throws IOException {
         Post post = PostMapper.dtoToEntity(postDTO);
