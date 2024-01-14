@@ -31,4 +31,10 @@ public class ThumbnailFileStorageService implements ImageFileStorageService {
         Path path = Path.of(ROOT + thumbnailPath + fileName);
         return Files.readAllBytes(path);
     }
+
+    @Override
+    public void delete(String filename) throws IOException {
+        Path path = Path.of(ROOT + thumbnailPath + filename);
+        Files.delete(path);
+    }
 }

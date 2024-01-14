@@ -8,4 +8,6 @@ public interface ImageFileStorageService {
 
     String store(byte[] imageBytes, String imageName) throws IOException;
     byte[] retrieve(String fileName) throws IOException;
+
+    void delete(String filename) throws IOException;
 }

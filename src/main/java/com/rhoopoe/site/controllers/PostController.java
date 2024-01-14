@@ -61,15 +61,17 @@ public class PostController {
     }
     @PutMapping("{uuid}")
     public ResponseEntity<Post> updatePost(@RequestBody PostDTO postDTO,
-                                           @PathVariable UUID uuid){
-        Post updatedPost = postService.updatePost(PostMapper.dtoToEntity(postDTO), uuid);
+                                           @PathVariable UUID uuid) throws IOException {
+        byte[] thumbnailBytes = Base64.getDecoder().decode(postDTO.getThumbnailBase64());
+        System.out.println("THUMBNAIL BYTES: " + thumbnailBytes.length);
+        Post updatedPost = postService.updatePost(PostMapper.dtoToEntity(postDTO), uuid, thumbnailBytes);
         if (updatedPost == null){
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(updatedPost, HttpStatus.ACCEPTED);
     }
     @DeleteMapping("{uuid}")
-    public ResponseEntity<String> deletePost(@PathVariable UUID uuid){
+    public ResponseEntity<String> deletePost(@PathVariable UUID uuid) throws IOException {
         postService.deletePost(uuid);
         try {
             postService.getPostById(uuid);

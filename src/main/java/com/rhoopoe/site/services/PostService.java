@@ -37,27 +37,39 @@ public class PostService {
         // 1) save post without thumbnail
         Post savedPost = postRepository.save(post);
         // 2) process thumbnail
+        String thumbnailPath = processThumbnail(thumbnail, savedPost);
+        // 3) update saved post with path to thumbnail
+        savedPost.setThumbnail(thumbnailPath);
+        return postRepository.save(savedPost);
+    }
+    public Post updatePost(Post updatedPost, UUID postUUID, byte[] thumbnailBytes) throws IOException {
+        Post postToBeUpdated = postRepository.getReferenceById(postUUID);
+        postToBeUpdated.setTitle(updatedPost.getTitle());
+        postToBeUpdated.setSubtitle(updatedPost.getSubtitle());
+        postToBeUpdated.setBody(updatedPost.getBody());
+        // Delete old thumbnail and process new one if new base64 thumbnail is provided
+        if (thumbnailBytes.length != 0) {
+            thumbnailFileStorageService.delete(postToBeUpdated.getUuid().toString() + ".png");
+            String newThumbnailPath = processThumbnail(thumbnailBytes, postToBeUpdated);
+            postToBeUpdated.setThumbnail(newThumbnailPath);
+        }
+        return postRepository.save(postToBeUpdated);
+    }
+
+
+    public void deletePost(UUID postID) throws IOException {
+        postRepository.deleteById(postID);
+        thumbnailFileStorageService.delete(postID + ".png");
+    }
+    private String processThumbnail(byte[] thumbnailBytes, Post post) throws IOException {
         StringBuilder thumbnailPath = new StringBuilder();
-        byte[] processedThumbnail = new ImageProcessing(thumbnail)
+        byte[] processedThumbnail = new ImageProcessing(thumbnailBytes)
                 .squareCropCenterWidth()
                 .resize(200,200)
                 .toByteArray();
         thumbnailPath.append(thumbnailFileStorageService.store(processedThumbnail,
-                    savedPost.getUuid().toString() + ".png"));
-        // 3) update saved post with path to thumbnail
-        savedPost.setThumbnail(thumbnailPath.toString());
-        return postRepository.save(savedPost);
+                post.getUuid().toString() + ".png"));
+        return thumbnailPath.toString();
     }
-    public Post updatePost(Post updatedPost, UUID postUUID){
-        Post postToBeUpdated = postRepository.getReferenceById(postUUID);
-        postToBeUpdated.setTitle(updatedPost.getTitle());
-        postToBeUpdated.setBody(updatedPost.getBody());
-        return postRepository.save(postToBeUpdated);
-    }
-
-    public void deletePost(UUID postID){
-        postRepository.deleteById(postID);
-    }
-
 
 }

@@ -9,6 +9,7 @@ public class PostMapper{
         Post post = new Post();
         post.setBody(postDTO.getBody());
         post.setTitle(postDTO.getTitle());
+        post.setSubtitle(postDTO.getSubtitle());
         // Thumbnail is null for now
         return post;
     }

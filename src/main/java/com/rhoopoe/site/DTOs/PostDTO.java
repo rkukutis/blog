@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 public class PostDTO {
     private String title;
+    private String subtitle;
     private String body;
     @JsonProperty("thumbnail")
     private String thumbnailBase64;

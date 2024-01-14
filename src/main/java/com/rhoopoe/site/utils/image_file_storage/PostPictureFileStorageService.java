@@ -27,4 +27,11 @@ public class PostPictureFileStorageService implements  ImageFileStorageService{
         Path path = Path.of(ROOT + postImagePath + fileName);
         return Files.readAllBytes(path);
     }
+
+    @Override
+    public void delete(String filename) throws IOException {
+        Path path = Path.of(ROOT + postImagePath + filename);
+        Files.delete(path);
+    }
+
 }

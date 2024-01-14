@@ -27,6 +27,11 @@ public class Post{
     @Column(columnDefinition = "TEXT")
     @NonNull
     @Setter
+    private String subtitle;
+
+    @Column(columnDefinition = "TEXT")
+    @NonNull
+    @Setter
     private String body;
 
     @Column(name = "thumbnail_image")
@@ -36,10 +41,19 @@ public class Post{
     @Column(name = "created_at")
     private Date createdAt;
 
-    @PrePersist
+    @Column(name = "modified_at")
+    private Date modifiedAt;
+
+    @PostPersist
     public void logCreatedAt(){
         this.createdAt = new Date();
+        modifiedAt = this.createdAt;
     }
+    @PostUpdate
+    public void modifiedAt(){
+        this.modifiedAt = new Date();
+    }
+
 
     @Override
     public boolean equals(Object o) {
