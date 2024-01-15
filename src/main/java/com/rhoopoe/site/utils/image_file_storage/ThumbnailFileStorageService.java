@@ -20,6 +20,9 @@ public class ThumbnailFileStorageService implements ImageFileStorageService {
         try {
         BufferedImage image = new ImageProcessing(imageBytes).toImage();
         File file = new File(path);
+        if (!file.exists()){
+                file.mkdirs();
+        }
         ImageIO.write(image, "png", file);
         } catch (IOException exception){
             log.error(path,"Could not write thumbnail to %s");

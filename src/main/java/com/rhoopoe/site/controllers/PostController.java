@@ -22,7 +22,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("posts")
 @RequiredArgsConstructor
-@CrossOrigin(value = "http://localhost:5173")
 public class PostController {
     private final PostService postService;
     @GetMapping("{uuid}")

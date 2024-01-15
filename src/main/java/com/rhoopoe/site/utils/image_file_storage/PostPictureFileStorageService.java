@@ -20,6 +20,9 @@ public class PostPictureFileStorageService implements  ImageFileStorageService{
         BufferedImage image = new ImageProcessing(imageBytes).toImage();
         String path = ROOT + postImagePath + imageName;
         File file = new File(path);
+        if (!file.exists()){
+            file.mkdirs();
+        }
         ImageIO.write(image, "png", file);
         return HOST + "/uploads/images/" + imageName;
     }
