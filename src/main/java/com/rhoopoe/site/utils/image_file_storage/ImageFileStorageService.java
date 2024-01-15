@@ -4,7 +4,7 @@ import java.io.IOException;
 
 public interface ImageFileStorageService {
     public static final String ROOT = "src/main/resources";
-    public static final String HOST = "http://localhost:8080";
+    public static final String HOST = "https://rhoopoe.com/api";
 
     String store(byte[] imageBytes, String imageName) throws IOException;
     byte[] retrieve(String fileName) throws IOException;
