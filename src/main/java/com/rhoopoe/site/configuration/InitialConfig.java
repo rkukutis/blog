@@ -1,9 +1,9 @@
 package com.rhoopoe.site.configuration;
 
-import com.rhoopoe.site.security.AuthenticationService;
-import com.rhoopoe.site.security.RegisterDTO;
-import com.rhoopoe.site.security.user.Role;
-import com.rhoopoe.site.security.user.UserRepository;
+import com.rhoopoe.site.service.security.AuthenticationService;
+import com.rhoopoe.site.dto.requests.RegisterDTO;
+import com.rhoopoe.site.enumerated.Role;
+import com.rhoopoe.site.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;

@@ -8,7 +8,7 @@ server:
         include-message: always
 spring:
     datasource:
-        password: hidden
+        password: jIOHohfdoiHIAD445_jds#LLd
         url: jdbc:postgresql://localhost:5432/personal_site
         username: rhoopoe
         driver-class-name: org.postgresql.Driver
@@ -37,6 +37,6 @@ app:
                 width: 1600
         host: http://localhost:8080
         secrets:
-            jwt-secret-key: hidden
+            jwt-secret-key: 56bd52a9882a6b7bfd065c980907a4e656bd52a9882a6b7bfd065c980907a4e6
             username: rhoopoe
-            password: hidden
+            password: ateitiesprofesionalas
