@@ -22,7 +22,7 @@ public class ImageProcessing {
             return ImageIO.read(byteArrayInputStream);
         }
     }
-    private byte[] ImageToByteArray(BufferedImage image) throws IOException {
+    private byte[] imageToByteArray(BufferedImage image) throws IOException {
         try (var byteArrayOutputStream = new ByteArrayOutputStream()) {
             ImageIO.write(image, "png", byteArrayOutputStream);
             return byteArrayOutputStream.toByteArray();
@@ -55,7 +55,7 @@ public class ImageProcessing {
         return this;
     }
     public byte[] toByteArray() throws IOException {
-        return this.ImageToByteArray(this.image);
+        return this.imageToByteArray(this.image);
     }
     public BufferedImage toImage() {
         return this.image;

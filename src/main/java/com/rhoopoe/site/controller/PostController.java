@@ -15,10 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Base64;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin("http://localhost:5173/")
 @RequestMapping("posts")
 @RequiredArgsConstructor
 public class PostController {
@@ -45,7 +47,8 @@ public class PostController {
     public ResponseEntity<Post> createPost(@RequestBody PostDTO postDTO) throws IOException {
         Post post = PostMapper.dtoToEntity(postDTO);
         byte[] thumbnailBytes = Base64.getDecoder().decode(postDTO.getThumbnailBase64());
-        return ResponseEntity.ok().body(postService.createPost(post, thumbnailBytes));
+        Post createdPost = postService.createPost(post, thumbnailBytes);
+        return ResponseEntity.created(URI.create(createdPost.getUuid().toString())).body(createdPost);
     }
     @PutMapping("{uuid}")
     public ResponseEntity<Post> updatePost(@RequestBody PostDTO postDTO,

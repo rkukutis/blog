@@ -23,7 +23,7 @@ public class ThumbnailProcessingService implements ImageProcessingService {
     private int thumbnailWidth;
 
     @Override
-    public BufferedImage processImage(byte[] imageBytes) throws IOException {
+    public BufferedImage processImage(byte[] imageBytes, String imageExtension) throws IOException {
         return new ImageProcessing(imageBytes)
                 .resize(thumbnailHeight, thumbnailWidth)
                 .squareCropCenterWidth()

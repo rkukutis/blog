@@ -1,7 +1,7 @@
 package com.rhoopoe.site.service;
 
 import com.rhoopoe.site.entity.Post;
-import com.rhoopoe.site.enumerated.ImageType;
+import com.rhoopoe.site.enumerated.image.ImageRole;
 import com.rhoopoe.site.exception.PostNotFoundException;
 import com.rhoopoe.site.repository.PostRepository;
 import com.rhoopoe.site.service.imagestorage.ImageFileStorageService;
@@ -74,7 +74,7 @@ public class PostService {
     private String processThumbnail(byte[] thumbnailBytes, Post post) throws IOException {
         StringBuilder thumbnailPath = new StringBuilder();
         thumbnailPath.append(imageFileStorageService.store(thumbnailBytes,
-                post.getUuid().toString() + ".png", ImageType.THUMBNAIL));
+                post.getUuid().toString() + ".png", ImageRole.THUMBNAIL));
         return thumbnailPath.toString();
     }
 

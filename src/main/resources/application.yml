@@ -14,8 +14,8 @@ spring:
         driver-class-name: org.postgresql.Driver
     servlet:
         multipart:
-            max-file-size=1024KB
-            max-request-size=1024KB
+            max-file-size: 20MB
+            max-request-size: 20MB
     jpa:
         hibernate:
             ddl-auto: create-drop

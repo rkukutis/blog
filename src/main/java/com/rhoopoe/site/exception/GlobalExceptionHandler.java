@@ -2,6 +2,7 @@ package com.rhoopoe.site.exception;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.InvalidFileNameException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,13 +17,13 @@ import java.util.Objects;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({IOException.class})
-    public ResponseEntity<String> handle(Exception exception, WebRequest request){
-        log.error("I/O: " + exception.getMessage());
-        return ResponseEntity.internalServerError().body(exception.getMessage());
-    }
+//    @ExceptionHandler({IOException.class})
+//    public ResponseEntity<String> handle(Exception exception, WebRequest request){
+//        log.error("I/O: " + exception.getMessage());
+//        return ResponseEntity.internalServerError().body(exception.getMessage());
+//    }
 
-    @ExceptionHandler({ConstraintViolationException.class})
+    @ExceptionHandler({ConstraintViolationException.class, InvalidFileNameException.class})
     public ResponseEntity<Object> handle(ConstraintViolationException exception, WebRequest request){
         log.error("VALIDATION: " + exception.getLocalizedMessage());
         return ResponseEntity.badRequest().body(exception.getMessage());
@@ -35,11 +36,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(message);
     }
 
-    @ExceptionHandler({PostNotFoundException.class, MessageNotFoundException.class, NoSuchFileException.class})
-    public ResponseEntity<String> handle(PostNotFoundException exception, WebRequest request){
-        log.error("NOT FOUND: " + exception.getLocalizedMessage());
-        return ResponseEntity.notFound().build();
-    }
+//    @ExceptionHandler({PostNotFoundException.class, MessageNotFoundException.class, NoSuchFileException.class})
+//    public ResponseEntity<String> handle(PostNotFoundException exception, WebRequest request){
+//        log.error("NOT FOUND: " + exception.getLocalizedMessage());
+//        return ResponseEntity.notFound().build();
+//    }
 
 
 }

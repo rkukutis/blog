@@ -23,9 +23,10 @@ public class PostPictureProcessingService implements ImageProcessingService {
     private int pictureWidth;
 
     @Override
-    public BufferedImage processImage(byte[] imageBytes) throws IOException {
+    public BufferedImage processImage(byte[] imageBytes, String imageExtension) throws IOException {
         return new ImageProcessing(imageBytes)
                 .resize(pictureHeight)
                 .toImage();
     }
+
 }

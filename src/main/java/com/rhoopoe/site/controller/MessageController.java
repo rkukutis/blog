@@ -13,12 +13,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/messages")
 @Validated
+@CrossOrigin("http://localhost:5173/")
+
 @Slf4j
 @RequiredArgsConstructor
 public class MessageController {
@@ -35,7 +38,7 @@ public ResponseEntity<List<Message>> getMessages(){
 public ResponseEntity<Message> createMessage(@RequestBody @Valid MessageDTO messageDTO){
     Message message = MessageMapper.dtoToEntity(messageDTO);
     Message createdMessage = messageService.createMessage(message);
-    return new ResponseEntity<>(createdMessage, HttpStatus.CREATED);
+    return ResponseEntity.created(URI.create(createdMessage.getUuid().toString())).body(createdMessage);
 }
 
 @DeleteMapping("/{messageUUID}")

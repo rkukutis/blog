@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public interface ImageProcessingService {
 
-    BufferedImage processImage(byte[] imageBytes) throws IOException;
+    BufferedImage processImage(byte[] imageBytes, String imageExtension) throws IOException;
 
     String getImagePath();
 
