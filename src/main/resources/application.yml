@@ -2,13 +2,13 @@ logging:
     level:
         org:
             springframework:
-                security: DEBUG
+                security: TRACE
 server:
     error:
         include-message: always
 spring:
     datasource:
-        password: jIOHohfdoiHIAD445_jds#LLd
+        password: hidden
         url: jdbc:postgresql://localhost:5432/personal_site
         username: rhoopoe
         driver-class-name: org.postgresql.Driver
@@ -18,11 +18,25 @@ spring:
             max-request-size=1024KB
     jpa:
         hibernate:
-            ddl-auto: update
+            ddl-auto: create-drop
         properties:
             hibernate:
                 format_sql: true
         show-sql: true
         database: postgresql
         database-platform: org.hibernate.dialect.PostgreSQLDialect
-host: http://localhost:8080
+app:
+    constants:
+        file-root: src/main/resources
+        image-processing:
+            thumbnail:
+                height: 200
+                width: 200
+            post-picture:
+                height: 300
+                width: 1600
+        host: http://localhost:8080
+        secrets:
+            jwt-secret-key: hidden
+            username: rhoopoe
+            password: hidden

@@ -3,8 +3,10 @@ package com.rhoopoe.site.controllers;
 
 import com.rhoopoe.site.DTOs.PostDTO;
 import com.rhoopoe.site.entities.Post;
+import com.rhoopoe.site.exceptions.PostNotFoundException;
 import com.rhoopoe.site.mappers.PostMapper;
 import com.rhoopoe.site.services.PostService;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +27,7 @@ import java.util.UUID;
 public class PostController {
     private final PostService postService;
     @GetMapping("{uuid}")
-    public ResponseEntity<Post> getPostById(@PathVariable UUID uuid){
+    public ResponseEntity<Post> getPostById(@PathVariable UUID uuid) throws PostNotFoundException {
         Post post = postService.getPostById(uuid);
         return ResponseEntity.ok().body(post);
     }
@@ -34,49 +36,29 @@ public class PostController {
     public ResponseEntity<Page<Post>> getAllPosts(@RequestParam(defaultValue = "1") Integer page,
                                                   @RequestParam(defaultValue = "10") Integer limit,
                                                   @RequestParam(defaultValue = "createdAt") String sortBy,
-                                                  @RequestParam(defaultValue = "false") String sortDesc,
+                                                  @RequestParam(defaultValue = "false") boolean sortDesc,
                                                   @RequestParam(required = false) String contains){
-        if (page < 1 || limit < 0) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-        if (!sortDesc.equals("true") && !sortDesc.equals("false")){
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
         page--;
-        Direction direction = Boolean.parseBoolean(sortDesc) ? Direction.DESC : Direction.ASC;
+        Direction direction = sortDesc ? Direction.DESC : Direction.ASC;
         Sort sort = Sort.by(direction, sortBy);
         PageRequest pageRequest = PageRequest.of(page, limit, sort);
-        return new ResponseEntity<>(postService.getAllPosts(pageRequest, contains), HttpStatus.OK);
+        return ResponseEntity.ok().body(postService.getAllPosts(pageRequest, contains));
     }
     @PostMapping
     public ResponseEntity<Post> createPost(@RequestBody PostDTO postDTO) throws IOException {
         Post post = PostMapper.dtoToEntity(postDTO);
         byte[] thumbnailBytes = Base64.getDecoder().decode(postDTO.getThumbnailBase64());
-        Post createdPost = postService.createPost(post, thumbnailBytes);
-        if (createdPost == null){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
+        return ResponseEntity.ok().body(postService.createPost(post, thumbnailBytes));
     }
     @PutMapping("{uuid}")
     public ResponseEntity<Post> updatePost(@RequestBody PostDTO postDTO,
                                            @PathVariable UUID uuid) throws IOException {
         byte[] thumbnailBytes = Base64.getDecoder().decode(postDTO.getThumbnailBase64());
-        System.out.println("THUMBNAIL BYTES: " + thumbnailBytes.length);
-        Post updatedPost = postService.updatePost(PostMapper.dtoToEntity(postDTO), uuid, thumbnailBytes);
-        if (updatedPost == null){
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        return new ResponseEntity<>(updatedPost, HttpStatus.ACCEPTED);
+        return ResponseEntity.ok().body(postService.updatePost(PostMapper.dtoToEntity(postDTO), uuid, thumbnailBytes));
     }
     @DeleteMapping("{uuid}")
-    public ResponseEntity<String> deletePost(@PathVariable UUID uuid) throws IOException {
+    public ResponseEntity<String> deletePost(@PathVariable UUID uuid) throws IOException, PostNotFoundException {
         postService.deletePost(uuid);
-        try {
-            postService.getPostById(uuid);
-        } catch (NoSuchElementException e){
-            return new ResponseEntity<>("Post deleted", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Could not delete post", HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -44,6 +44,16 @@ public class ImageProcessing {
         this.image = resizedImage;
         return this;
     }
+    public ImageProcessing resize(int height) {
+        double factor = (double) height / image.getHeight();
+        int newWidth = (int)(image.getWidth() * factor);
+        BufferedImage resizedImage = new BufferedImage(newWidth, height, image.getType());
+        Graphics graphics = resizedImage.createGraphics();
+        graphics.drawImage(this.image,0,0,newWidth, height, null);
+        graphics.dispose();
+        this.image = resizedImage;
+        return this;
+    }
     public byte[] toByteArray() throws IOException {
         return this.ImageToByteArray(this.image);
     }

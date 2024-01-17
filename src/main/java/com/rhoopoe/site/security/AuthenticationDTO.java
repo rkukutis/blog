@@ -1,15 +1,19 @@
 package com.rhoopoe.site.security;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
-@Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
+@ToString
 public class AuthenticationDTO {
-    private String username;
-    private String password;
+
+    @NotBlank(message = "username can not be blank")
+    @Length(min = 0, max = 100)
+    private final String username;
+
+    @NotBlank(message = "password can not be blank")
+    @Length(min = 0, max = 100)
+    private final String password;
 }
