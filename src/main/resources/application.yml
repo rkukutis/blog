@@ -28,6 +28,9 @@ spring:
 app:
     constants:
         file-root: src/main/resources
+        image-location:
+            post-picture: /images/post-pictures
+            thumbnail: /images/thumbnails
         image-processing:
             thumbnail:
                 height: 200

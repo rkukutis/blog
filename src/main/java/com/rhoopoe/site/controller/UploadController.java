@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.Objects;
 
 @RestController
@@ -30,7 +31,8 @@ public class UploadController {
     public ResponseEntity<String> uploadImage(@RequestParam @NonNull MultipartFile image) throws IOException {
         PostImage uploadedPostImage = postImageService.store(image.getBytes(), image.getOriginalFilename());
         log.info("Returning uploaded image path: {}", uploadedPostImage.getPath());
-        return ResponseEntity.created(URI.create(uploadedPostImage.getPath())).body(uploadedPostImage.getPath());
+        return ResponseEntity.created(URI.create(uploadedPostImage.getPath()))
+                .body(uploadedPostImage.getPath());
     }
     @GetMapping(path = "/images/{imageName}")
     public ResponseEntity<byte[]> getImage(@PathVariable String imageName) throws IOException {

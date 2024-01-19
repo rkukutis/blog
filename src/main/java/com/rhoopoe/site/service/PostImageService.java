@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 
 @Service
@@ -34,8 +35,8 @@ public class PostImageService {
         String imageExtension = "." + FileUtils.getFileExtension(imageName);
         String storedName = savedImage.getUuid().toString() + imageExtension;
         savedImage.setImageName(storedName);
-        String path = imageFileStorageService.store(imageBytes, storedName, ImageRole.POST_IMAGE);
-        savedImage.setPath(path);
+        String savedPath = imageFileStorageService.store(imageBytes, storedName, ImageRole.POST_IMAGE);
+        savedImage.setPath(savedPath);
         return savedImage;
     }
     public byte[] retrieve(String imageName, ImageRole imageRole) throws IOException {

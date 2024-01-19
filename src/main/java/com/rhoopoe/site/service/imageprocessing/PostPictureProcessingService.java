@@ -14,7 +14,10 @@ import java.io.IOException;
 @Getter
 public class PostPictureProcessingService implements ImageProcessingService {
 
-    private final String imagePath = "/images/post-pictures/";
+    @Getter
+    @Value("${app.constants.image-location.post-picture}")
+    private String imagePath;
+
 
     @Value("${app.constants.image-processing.post-picture.height}")
     private int pictureHeight;

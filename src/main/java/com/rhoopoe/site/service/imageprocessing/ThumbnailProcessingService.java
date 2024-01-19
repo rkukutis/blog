@@ -14,7 +14,8 @@ import java.io.*;
 public class ThumbnailProcessingService implements ImageProcessingService {
 
     @Getter
-    private final String imagePath = "/images/thumbnails/";
+    @Value("${app.constants.image-location.thumbnail}")
+    private String imagePath;
 
     @Value("${app.constants.image-processing.thumbnail.height}")
     private int thumbnailHeight;

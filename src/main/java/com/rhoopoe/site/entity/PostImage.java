@@ -3,6 +3,8 @@ package com.rhoopoe.site.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
+
+import java.nio.file.Path;
 import java.util.Date;
 import java.util.UUID;
 

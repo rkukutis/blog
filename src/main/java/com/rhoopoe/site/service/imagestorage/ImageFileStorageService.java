@@ -52,9 +52,8 @@ public class ImageFileStorageService {
                 imagePath = postPictureProcessingService.getImagePath();
             }
         }
-        log.info("Continuing AFTER GIF UPLOAD");
-        String path = FILE_ROOT_PATH + imagePath + imageName;
-        File file = new File(path);
+        Path path = Path.of(FILE_ROOT_PATH + imagePath, imageName);
+        File file = new File(path.toString());
         if (!file.exists()){
             file.mkdirs();
         }
@@ -63,9 +62,13 @@ public class ImageFileStorageService {
     }
     public byte[] retrieve(String fileName, ImageRole imageRole) throws IOException {
         if (imageRole == ImageRole.POST_IMAGE) {
-            return Files.readAllBytes(Path.of("src/main/resources/images/post-pictures", fileName));
+            return Files.readAllBytes(
+                    Path.of(FILE_ROOT_PATH + postPictureProcessingService.getImagePath(), fileName)
+            );
         }
-        return Files.readAllBytes(Path.of("src/main/resources/images/thumbnails", fileName));
+        return Files.readAllBytes(
+                Path.of(FILE_ROOT_PATH + thumbnailProcessingService.getImagePath(), fileName)
+        );
     }
 
     public void delete(String filename) throws IOException {
@@ -75,7 +78,7 @@ public class ImageFileStorageService {
 
     private void writeGif(byte[] imageBytes, String name) throws IOException {
         try (InputStream is = new ByteArrayInputStream(imageBytes)){
-            Path storagePath = Path.of("src/main/resources/images/post-pictures", name);
+            Path storagePath = Path.of(FILE_ROOT_PATH + "/images/post-pictures", name);
             log.debug("Storing GIF in {}", storagePath.toString());
             Files.write(storagePath, imageBytes);
         }
