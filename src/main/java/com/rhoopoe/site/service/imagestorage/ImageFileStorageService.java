@@ -71,8 +71,12 @@ public class ImageFileStorageService {
         );
     }
 
-    public void delete(String filename) throws IOException {
-        Path path = Path.of(FILE_ROOT_PATH + imagePath + filename);
+    public void delete(String filename, ImageRole role) throws IOException {
+        Path path = null;
+        switch (role){
+            case THUMBNAIL -> path = Path.of(FILE_ROOT_PATH + thumbnailProcessingService.getImagePath(), filename);
+            case POST_IMAGE -> path = Path.of(FILE_ROOT_PATH + postPictureProcessingService.getImagePath(), filename);
+        }
         Files.delete(path);
     }
 

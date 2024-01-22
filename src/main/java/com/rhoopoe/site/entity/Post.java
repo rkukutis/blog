@@ -1,12 +1,12 @@
 package com.rhoopoe.site.entity;
 
 
+import com.rhoopoe.site.enumerated.PostTheme;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 
-import java.util.Date;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "posts")
@@ -14,6 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @RequiredArgsConstructor
 public class Post{
+
 
     @Id
     @Column(name = "id")
@@ -38,6 +39,12 @@ public class Post{
     @Setter
     private String thumbnail;
 
+    @ElementCollection(targetClass = PostTheme.class)
+    @JoinTable(name = "post_themes", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "themes", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Set<PostTheme> themes = new HashSet<>();
+
     @Column(name = "created_at")
     private Date createdAt;
 
@@ -54,6 +61,9 @@ public class Post{
         this.modifiedAt = new Date();
     }
 
+    public void setThemes(Set<PostTheme> themes) {
+        this.themes = themes;
+    }
 
     @Override
     public boolean equals(Object o) {

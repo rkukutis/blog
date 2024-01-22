@@ -51,10 +51,11 @@ public class PostService {
         Post postToBeUpdated = postRepository.getReferenceById(postUUID);
         postToBeUpdated.setTitle(updatedPost.getTitle());
         postToBeUpdated.setSubtitle(updatedPost.getSubtitle());
+        postToBeUpdated.setThemes(updatedPost.getThemes());
         postToBeUpdated.setBody(updatedPost.getBody());
         // Delete old thumbnail and process new one if new base64 thumbnail is provided
         if (thumbnailBytes.length != 0) {
-            imageFileStorageService.delete(postToBeUpdated.getUuid().toString() + ".png");
+            imageFileStorageService.delete(postToBeUpdated.getUuid().toString() + ".png", ImageRole.THUMBNAIL);
             String newThumbnailPath = processThumbnail(thumbnailBytes, postToBeUpdated);
             postToBeUpdated.setThumbnail(newThumbnailPath);
         }
@@ -69,7 +70,7 @@ public class PostService {
         } catch (IllegalArgumentException exception){
             throw new PostNotFoundException(postID);
         }
-        imageFileStorageService.delete(postID + ".png");
+        imageFileStorageService.delete(postID + ".png", ImageRole.THUMBNAIL);
     }
     private String processThumbnail(byte[] thumbnailBytes, Post post) throws IOException {
         StringBuilder thumbnailPath = new StringBuilder();
