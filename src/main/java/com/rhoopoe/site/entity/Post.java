@@ -5,6 +5,8 @@ import com.rhoopoe.site.enumerated.PostTheme;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.util.*;
 
@@ -45,9 +47,11 @@ public class Post{
     @Enumerated(EnumType.STRING)
     private Set<PostTheme> themes = new HashSet<>();
 
+    @CreatedDate
     @Column(name = "created_at")
     private Date createdAt;
 
+    @LastModifiedDate
     @Column(name = "modified_at")
     private Date modifiedAt;
 
@@ -56,7 +60,7 @@ public class Post{
         this.createdAt = new Date();
         modifiedAt = this.createdAt;
     }
-    @PostUpdate
+    @PreUpdate
     public void modifiedAt(){
         this.modifiedAt = new Date();
     }

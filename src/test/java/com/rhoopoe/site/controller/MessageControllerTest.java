@@ -1,15 +1,22 @@
 package com.rhoopoe.site.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rhoopoe.site.configuration.security.SecurityConfig;
+import com.rhoopoe.site.dto.requests.MessageDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
+@Import(SecurityConfig.class)
 @AutoConfigureMockMvc
 class MessageControllerTest {
     @Autowired
@@ -21,14 +28,12 @@ class MessageControllerTest {
                 .andExpectAll(status().isForbidden());
     }
 
-    /*
-    TODO: Does not work because default security config is used,
-      which results in 403 every time
     @Test
-    void givenPostNewMessage_whenNoJWT_thenCreated() throws Exception {
+    @WithMockUser
+    void givenPostNewMessage_whenAuthenticated_thenForbidden() throws Exception {
 
         MessageDTO messageDTO = new MessageDTO(
-                "name", "email", "body");
+                "Test Name", "mail@email.com", "Test Body");
         String json = asJsonString(messageDTO);
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/messages")
@@ -36,9 +41,8 @@ class MessageControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json)
                 )
-                .andExpectAll(status().isCreated());
+                .andExpect(status().isForbidden());
     }
-     */
     private String asJsonString(Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);

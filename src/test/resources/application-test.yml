@@ -1,0 +1,45 @@
+logging:
+    level:
+        org:
+            springframework:
+                security: TRACE
+server:
+    error:
+        include-message: always
+spring:
+    datasource:
+        password: jIOHohfdoiHIAD445_jds#LLd
+        url: jdbc:postgresql://localhost:5432/personal_site
+        username: rhoopoe
+        driver-class-name: org.postgresql.Driver
+    servlet:
+        multipart:
+            max-file-size: 20MB
+            max-request-size: 20MB
+    jpa:
+        hibernate:
+            ddl-auto: update
+        properties:
+            hibernate:
+                format_sql: true
+        show-sql: true
+        database: postgresql
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+app:
+    constants:
+        file-root: src/test/resources
+        image-location:
+            post-picture: /images/post-pictures
+            thumbnail: /images/thumbnails
+        image-processing:
+            thumbnail:
+                height: 200
+                width: 200
+            post-picture:
+                height: 300
+                width: 1600
+        host: http://localhost:8080
+        secrets:
+            jwt-secret-key: 56bd52a9882a6b7bfd065c980907a4e656bd52a9882a6b7bfd065c980907a4e6
+            username: rhoopoe
+            password: ateitiesprofesionalas
