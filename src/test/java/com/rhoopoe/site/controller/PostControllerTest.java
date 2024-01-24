@@ -1,50 +1,44 @@
 package com.rhoopoe.site.controller;
 
+
 import com.rhoopoe.site.configuration.security.JwtAuthenticationFilter;
-import com.rhoopoe.site.service.MessageService;
-import com.rhoopoe.site.service.PostImageService;
-import com.rhoopoe.site.service.PostService;
-import com.rhoopoe.site.service.security.AuthenticationService;
+import com.rhoopoe.site.configuration.security.SecurityConfig;
+import com.rhoopoe.site.configuration.security.SecurityFilters;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@WebMvcTest
-@AutoConfigureMockMvc
+@SpringBootTest
 class PostControllerTest {
 
-    @MockBean
-    private JwtAuthenticationFilter jwtAuthFilter;
-    @MockBean
-    private AuthenticationProvider authenticationProvider;
-    @MockBean
-    private AuthenticationService authenticationService;
-    @MockBean
-    private MessageService messageService;
-    @MockBean
-    private PostService postService;
-    @MockBean
-    PostImageService postImageService;
-    @MockBean UploadController uploadController;
     @Autowired
+    private WebApplicationContext context;
+
+    @BeforeEach
+    void configureMockMvc(){
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
+    }
+
     private MockMvc mockMvc;
 
     @Test
+    @WithAnonymousUser
     void givenPostNewMessage_whenAuthenticated_thenForbidden() throws Exception {
-
-        mockMvc.perform(
-                        MockMvcRequestBuilders.get("/posts").with(csrf())
-                )
+        mockMvc.perform(MockMvcRequestBuilders.get("/posts"))
                 .andExpect(status().isOk());
     }
-
 }
