@@ -1,5 +1,7 @@
 package com.rhoopoe.site.utility;
 
+import com.rhoopoe.site.exception.ImageProcessingException;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -13,13 +15,17 @@ public class ImageProcessing {
     public ImageProcessing(BufferedImage image) {
         this.image = image;
     }
-    public ImageProcessing(byte[] image) throws IOException {
+    public ImageProcessing(byte[] image) throws ImageProcessingException {
         this.image = this.byteArrayToImage(image);
     }
 
-    private BufferedImage byteArrayToImage(byte[] bytes) throws IOException {
+    private BufferedImage byteArrayToImage(byte[] bytes) throws ImageProcessingException {
         try (var byteArrayInputStream = new ByteArrayInputStream(bytes)) {
-            return ImageIO.read(byteArrayInputStream);
+            BufferedImage createdImage =  ImageIO.read(byteArrayInputStream);
+            if (createdImage == null) throw new ImageProcessingException();
+            return createdImage;
+        } catch (Exception exception){
+            throw new ImageProcessingException("Error while converting byte array to BufferedImage");
         }
     }
     private byte[] imageToByteArray(BufferedImage image) throws IOException {
@@ -29,14 +35,29 @@ public class ImageProcessing {
         }
     }
     public ImageProcessing squareCropCenterWidth() {
-        this.image = this.image.getSubimage(
-                    (int) (image.getWidth() * 0.25),
+        if (image.getWidth() >= image.getHeight()) {
+            int startX = (image.getWidth() - image.getHeight()) / 2;
+            image = image.getSubimage(
+                        startX,
+                        0,
+                        image.getHeight(),
+                        image.getHeight()
+            );
+        } else {
+            int startY = (image.getHeight() - image.getWidth()) / 2;
+            image = image.getSubimage(
                     0,
-                    image.getWidth() / 2,
-                    image.getWidth() / 2);
-            return this;
+                    startY,
+                    image.getWidth(),
+                    image.getWidth()
+            );
+        }
+        return this;
     }
-    public ImageProcessing resize(int height, int width) {
+    public ImageProcessing resize(int height, int width, boolean upscale) {
+        if (!upscale && image.getHeight() <= height || image.getWidth() <= width) {
+            return this;
+        }
         BufferedImage resizedImage = new BufferedImage(width, height, image.getType());
         Graphics graphics = resizedImage.createGraphics();
         graphics.drawImage(this.image,0,0,width, height, null);
@@ -44,7 +65,10 @@ public class ImageProcessing {
         this.image = resizedImage;
         return this;
     }
-    public ImageProcessing resize(int height) {
+    public ImageProcessing resize(int height, boolean upscale) {
+        if (!upscale && image.getHeight() <= height) {
+            return this;
+        }
         double factor = (double) height / image.getHeight();
         int newWidth = (int)(image.getWidth() * factor);
         BufferedImage resizedImage = new BufferedImage(newWidth, height, image.getType());

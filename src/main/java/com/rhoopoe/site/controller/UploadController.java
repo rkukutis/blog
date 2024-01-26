@@ -2,6 +2,7 @@ package com.rhoopoe.site.controller;
 
 import com.rhoopoe.site.entity.PostImage;
 import com.rhoopoe.site.enumerated.image.ImageRole;
+import com.rhoopoe.site.exception.ImageProcessingException;
 import com.rhoopoe.site.service.PostImageService;
 import com.rhoopoe.site.service.imagestorage.ImageFileStorageService;
 import com.rhoopoe.site.utility.FileUtils;
@@ -28,7 +29,8 @@ public class UploadController {
     private final ImageFileStorageService imageFileStorageService;
 
     @PostMapping(path = "/images", headers={"content-type=multipart/form-data"}, consumes = "image/*")
-    public ResponseEntity<String> uploadImage(@RequestParam @NonNull MultipartFile image) throws IOException {
+    public ResponseEntity<String> uploadImage(@RequestParam @NonNull MultipartFile image) throws IOException,
+            ImageProcessingException {
         PostImage uploadedPostImage = postImageService.store(image.getBytes(), image.getOriginalFilename());
         log.info("Returning uploaded image path: {}", uploadedPostImage.getPath());
         return ResponseEntity.created(URI.create(uploadedPostImage.getPath()))

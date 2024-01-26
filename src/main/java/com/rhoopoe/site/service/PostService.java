@@ -2,6 +2,7 @@ package com.rhoopoe.site.service;
 
 import com.rhoopoe.site.entity.Post;
 import com.rhoopoe.site.enumerated.image.ImageRole;
+import com.rhoopoe.site.exception.ImageProcessingException;
 import com.rhoopoe.site.exception.PostNotFoundException;
 import com.rhoopoe.site.repository.PostRepository;
 import com.rhoopoe.site.service.imagestorage.ImageFileStorageService;
@@ -36,7 +37,7 @@ public class PostService {
     }
 
     @CacheEvict(value = "posts", allEntries = true)
-    public Post createPost(Post post, byte[] thumbnail) throws IOException{
+    public Post createPost(Post post, byte[] thumbnail) throws IOException, ImageProcessingException {
         // 1) save post without thumbnail
         Post savedPost = postRepository.save(post);
         // 2) process thumbnail
@@ -47,7 +48,8 @@ public class PostService {
         return postRepository.save(savedPost);
     }
     @CacheEvict(value = "posts", allEntries = true)
-    public Post updatePost(Post updatedPost, UUID postUUID, byte[] thumbnailBytes) throws IOException {
+    public Post updatePost(Post updatedPost, UUID postUUID, byte[] thumbnailBytes) throws IOException,
+            ImageProcessingException {
         Post postToBeUpdated = postRepository.getReferenceById(postUUID);
         postToBeUpdated.setTitle(updatedPost.getTitle());
         postToBeUpdated.setSubtitle(updatedPost.getSubtitle());
@@ -72,7 +74,7 @@ public class PostService {
         }
         imageFileStorageService.delete(postID + ".png", ImageRole.THUMBNAIL);
     }
-    private String processThumbnail(byte[] thumbnailBytes, Post post) throws IOException {
+    private String processThumbnail(byte[] thumbnailBytes, Post post) throws IOException, ImageProcessingException {
         StringBuilder thumbnailPath = new StringBuilder();
         thumbnailPath.append(imageFileStorageService.store(thumbnailBytes,
                 post.getUuid().toString() + ".png", ImageRole.THUMBNAIL));

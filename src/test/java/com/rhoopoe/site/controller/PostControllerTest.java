@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -36,8 +37,8 @@ class PostControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @WithAnonymousUser
-    void givenPostNewMessage_whenAuthenticated_thenForbidden() throws Exception {
+    @WithMockUser
+    void givenGetPosts_whenUser_thenOk() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/posts"))
                 .andExpect(status().isOk());
     }

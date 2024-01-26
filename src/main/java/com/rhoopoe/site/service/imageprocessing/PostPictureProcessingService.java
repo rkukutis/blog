@@ -1,5 +1,6 @@
 package com.rhoopoe.site.service.imageprocessing;
 
+import com.rhoopoe.site.exception.ImageProcessingException;
 import com.rhoopoe.site.utility.ImageProcessing;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -26,9 +27,9 @@ public class PostPictureProcessingService implements ImageProcessingService {
     private int pictureWidth;
 
     @Override
-    public BufferedImage processImage(byte[] imageBytes, String imageExtension) throws IOException {
+    public BufferedImage processImage(byte[] imageBytes, String imageExtension) throws ImageProcessingException {
         return new ImageProcessing(imageBytes)
-                .resize(pictureHeight)
+                .resize(pictureHeight, false)
                 .toImage();
     }
 

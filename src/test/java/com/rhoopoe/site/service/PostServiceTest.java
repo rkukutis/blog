@@ -1,6 +1,7 @@
 package com.rhoopoe.site.service;
 
 import com.rhoopoe.site.entity.Post;
+import com.rhoopoe.site.exception.ImageProcessingException;
 import com.rhoopoe.site.repository.PostRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +27,7 @@ class PostServiceTest {
 
 
     @Test
-    void givenNewPost_whenSavePost_thenPostHasThumbnailURL() throws IOException {
+    void givenNewPost_whenSavePost_thenPostHasThumbnailURL() throws IOException, ImageProcessingException {
         Post post = new Post("TEST TITLE","TEST SUBTITLE", "TEST BODY");
         Path testFile = Paths.get("src/test/java/com/rhoopoe/site/services/base64Image.txt");
         String thumbnail = Files.readString(testFile);

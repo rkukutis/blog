@@ -8,23 +8,14 @@ server:
         include-message: always
 spring:
     datasource:
-        password: jIOHohfdoiHIAD445_jds#LLd
-        url: jdbc:postgresql://localhost:5432/personal_site
-        username: rhoopoe
-        driver-class-name: org.postgresql.Driver
+        password: sa
+        url: jdbc:h2:mem:db;DB_CLOSE_DELAY=-1
+        username: sa
+        driver-class-name: org.h2.Driver
     servlet:
         multipart:
             max-file-size: 20MB
             max-request-size: 20MB
-    jpa:
-        hibernate:
-            ddl-auto: update
-        properties:
-            hibernate:
-                format_sql: true
-        show-sql: true
-        database: postgresql
-        database-platform: org.hibernate.dialect.PostgreSQLDialect
 app:
     constants:
         file-root: src/test/resources

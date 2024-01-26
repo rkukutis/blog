@@ -3,6 +3,7 @@ package com.rhoopoe.site.controller;
 
 import com.rhoopoe.site.dto.requests.PostDTO;
 import com.rhoopoe.site.entity.Post;
+import com.rhoopoe.site.exception.ImageProcessingException;
 import com.rhoopoe.site.exception.PostNotFoundException;
 import com.rhoopoe.site.mapper.PostMapper;
 import com.rhoopoe.site.service.PostService;
@@ -49,7 +50,8 @@ public class PostController {
         return ResponseEntity.ok().body(postService.getAllPosts(pageRequest, contains));
     }
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody @Valid PostDTO postDTO) throws IOException {
+    public ResponseEntity<Post> createPost(@RequestBody @Valid PostDTO postDTO) throws IOException,
+            ImageProcessingException {
         Post post = PostMapper.dtoToEntity(postDTO);
         byte[] thumbnailBytes = Base64.getDecoder().decode(postDTO.getThumbnailBase64());
         Post createdPost = postService.createPost(post, thumbnailBytes);
@@ -57,7 +59,7 @@ public class PostController {
     }
     @PutMapping("{uuid}")
     public ResponseEntity<Post> updatePost(@RequestBody @Valid PostDTO postDTO,
-                                           @PathVariable UUID uuid) throws IOException {
+                                           @PathVariable UUID uuid) throws IOException, ImageProcessingException {
         byte[] thumbnailBytes = Base64.getDecoder().decode(postDTO.getThumbnailBase64());
         return ResponseEntity.ok().body(postService.updatePost(PostMapper.dtoToEntity(postDTO), uuid, thumbnailBytes));
     }

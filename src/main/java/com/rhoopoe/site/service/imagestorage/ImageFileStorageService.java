@@ -1,6 +1,7 @@
 package com.rhoopoe.site.service.imagestorage;
 
 import com.rhoopoe.site.enumerated.image.ImageRole;
+import com.rhoopoe.site.exception.ImageProcessingException;
 import com.rhoopoe.site.service.imageprocessing.PostPictureProcessingService;
 import com.rhoopoe.site.service.imageprocessing.ThumbnailProcessingService;
 import com.rhoopoe.site.utility.FileUtils;
@@ -33,7 +34,8 @@ public class ImageFileStorageService {
 
     private String imagePath;
 
-    public String store(byte[] imageBytes, String imageName, ImageRole imageRole) throws IOException {
+    public String store(byte[] imageBytes, String imageName, ImageRole imageRole) throws ImageProcessingException,
+            IOException {
 
         BufferedImage image = null;
         String imageExtension = FileUtils.getFileExtension(imageName);
@@ -80,11 +82,17 @@ public class ImageFileStorageService {
         Files.delete(path);
     }
 
-    private void writeGif(byte[] imageBytes, String name) throws IOException {
+    private void writeGif(byte[] imageBytes, String name) throws ImageProcessingException {
         try (InputStream is = new ByteArrayInputStream(imageBytes)){
-            Path storagePath = Path.of(FILE_ROOT_PATH + "/images/post-pictures", name);
-            log.debug("Storing GIF in {}", storagePath.toString());
-            Files.write(storagePath, imageBytes);
+            Path parentDir = Path.of(FILE_ROOT_PATH + "/images/post-pictures");
+            Path filePath = Path.of(parentDir.toString(), name);
+            if (!Files.exists(parentDir)){
+                Files.createDirectory(parentDir);
+            }
+            log.debug("Storing GIF in {}", filePath);
+            Files.write(filePath, imageBytes);
+        } catch (IOException exception) {
+            throw new ImageProcessingException("Error while storing gif data");
         }
     }
 }
