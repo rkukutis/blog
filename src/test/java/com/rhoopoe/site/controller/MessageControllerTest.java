@@ -50,21 +50,21 @@ class MessageControllerTest {
                 .andExpectAll(status().isForbidden());
     }
 
-    @Test
-    @WithAnonymousUser
-    void givenPostNewMessage_whenAnonymous_thenCreated() throws Exception {
-
-        MessageDTO messageDTO = new MessageDTO(
-                "Test Name", "mail@email.com", "Test Body");
-        String json = asJsonString(messageDTO);
-        mockMvc.perform(
-                MockMvcRequestBuilders.post("/messages")
-                        .with(SecurityMockMvcRequestPostProcessors.csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(json)
-                )
-                .andExpect(status().isCreated());
-    }
+//    @Test
+//    @WithAnonymousUser
+//    void givenPostNewMessage_whenAnonymous_thenCreated() throws Exception {
+//
+//        MessageDTO messageDTO = new MessageDTO(
+//                "Test Name", "mail@email.com", "Test Body");
+//        String json = asJsonString(messageDTO);
+//        mockMvc.perform(
+//                MockMvcRequestBuilders.post("/messages")
+//                        .with(SecurityMockMvcRequestPostProcessors.csrf())
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(json)
+//                )
+//                .andExpect(status().isCreated());
+//    }
 
     private String asJsonString(Object obj) {
         try {

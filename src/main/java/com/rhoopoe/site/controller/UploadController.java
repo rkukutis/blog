@@ -22,7 +22,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("uploads")
 @Slf4j
-@CrossOrigin("http://localhost:5173/")
+//@CrossOrigin("http://localhost:5173/")
 @RequiredArgsConstructor
 public class UploadController {
     private final PostImageService postImageService;
