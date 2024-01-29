@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @RestController
 @Validated
-//@CrossOrigin("http://localhost:5173/")
+@CrossOrigin("http://localhost:5173/")
 @RequestMapping("posts")
 @RequiredArgsConstructor
 public class PostController {

@@ -20,7 +20,8 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/messages")
 @Validated
-//@CrossOrigin("http://localhost:5173/")
+@CrossOrigin("http://localhost:5173/")
+
 @Slf4j
 @RequiredArgsConstructor
 public class MessageController {

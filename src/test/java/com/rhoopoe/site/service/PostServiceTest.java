@@ -29,7 +29,7 @@ class PostServiceTest {
     @Test
     void givenNewPost_whenSavePost_thenPostHasThumbnailURL() throws IOException, ImageProcessingException {
         Post post = new Post("TEST TITLE","TEST SUBTITLE", "TEST BODY");
-        Path testFile = Paths.get("src/test/resources/test-images/base64Image.txt");
+        Path testFile = Paths.get("src/test/java/com/rhoopoe/site/services/base64Image.txt");
         String thumbnail = Files.readString(testFile);
         byte[] bytes = Base64.getDecoder().decode(thumbnail);
         Post savedPost = postService.createPost(post, bytes);

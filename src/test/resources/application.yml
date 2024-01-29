@@ -29,7 +29,7 @@ app:
             post-picture:
                 height: 300
                 width: 1600
-        host: https://rhoopoe.com/api
+        host: http://localhost:8080
         secrets:
             jwt-secret-key: 56bd52a9882a6b7bfd065c980907a4e656bd52a9882a6b7bfd065c980907a4e6
             username: rhoopoe

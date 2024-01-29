@@ -1,9 +1,15 @@
 package com.rhoopoe.site.controller;
 
+
+import com.rhoopoe.site.configuration.security.JwtAuthenticationFilter;
+import com.rhoopoe.site.configuration.security.SecurityConfig;
+import com.rhoopoe.site.configuration.security.SecurityFilters;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
