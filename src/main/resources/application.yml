@@ -18,7 +18,7 @@ spring:
             max-request-size: 20MB
     jpa:
         hibernate:
-            ddl-auto: update
+            ddl-auto: create-drop
         properties:
             hibernate:
                 format_sql: true
@@ -38,7 +38,8 @@ app:
             post-picture:
                 height: 300
                 width: 1600
-        host: https://rhoopoe.com/api
+        host: https://blog-api.rhoopoe.com
+        client: https://blog.rhoopoe.com
         secrets:
             jwt-secret-key: 56bd52a9882a6b7bfd065c980907a4e656bd52a9882a6b7bfd065c980907a4e6
             username: rhoopoe
