@@ -39,7 +39,7 @@ class PostServiceTest {
         Post savedPost = postService.createPost(post, bytes);
         assertNotNull(savedPost.getUuid());
         assertNotNull(savedPost.getCreatedAt());
-        assertEquals("https://rhoopoe.com/api/uploads/images/thumbnails/" + savedPost.getUuid() + ".png",
+        assertEquals("https://blog-api.rhoopoe.com/uploads/images/thumbnails/" + savedPost.getUuid() + ".png",
                 savedPost.getThumbnail());
         imageFileStorageService.delete(savedPost.getUuid() + ".png", ImageRole.THUMBNAIL);
     }
