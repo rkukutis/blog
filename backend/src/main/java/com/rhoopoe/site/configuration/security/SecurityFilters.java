@@ -26,6 +26,7 @@ public class SecurityFilters {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .authorizeHttpRequests(authorize ->
                         authorize.requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/", "/index.html", "/error","/assets/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"uploads/images/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "posts/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "messages").anonymous()
