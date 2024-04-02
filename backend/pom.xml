@@ -9,10 +9,11 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.rhoopoe</groupId>
-	<artifactId>site</artifactId>
+	<artifactId>blog</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>site</name>
-	<description>Personal website</description>
+	<name>blog</name>
+	<packaging>war</packaging>
+	<description>Blog website</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -108,6 +109,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
+					<finalName>ROOT</finalName>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>

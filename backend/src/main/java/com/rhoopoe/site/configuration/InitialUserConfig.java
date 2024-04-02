@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-public class InitialConfig {
+public class InitialUserConfig {
     private final UserRepository userRepository;
     private final AuthenticationService authenticationService;
 

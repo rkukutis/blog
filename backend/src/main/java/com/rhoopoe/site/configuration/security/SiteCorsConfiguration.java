@@ -11,14 +11,13 @@ import java.util.List;
 @Configuration
 public class SiteCorsConfiguration {
 
-    @Value("${app.constants.client}")
-    private String client;
+    @Value("${app.constants.host}")
+    private String host;
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-        System.out.println("CLIENT IS: " + client);
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(client));
+        configuration.setAllowedOrigins(List.of(host));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
