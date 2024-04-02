@@ -16,7 +16,6 @@ public class SiteCorsConfiguration {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-        System.out.println("CLIENT IS: " + client);
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(client));
         configuration.setAllowedMethods(List.of("*"));

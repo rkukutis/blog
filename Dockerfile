@@ -11,7 +11,8 @@ COPY backend/pom.xml /app
 COPY --from=frontend-builder ./dist /app/src/main/resources/static
 RUN mvn -f /app/pom.xml clean package -Dmaven.test.skip=true
 
-FROM tomcat:10.1.20-jdk17-temurin-jammy
-COPY --from=backend-builder app/target/*.war /usr/local/tomcat/webapps/
+FROM openjdk:17-alpine
+COPY --from=backend-builder app/target/*.jar /blog-app/app.jar
+WORKDIR /blog-app
 EXPOSE 8080
-ENTRYPOINT ["catalina.sh", "run"]
+ENTRYPOINT ["java","-jar","app.jar"]
