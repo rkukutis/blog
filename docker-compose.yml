@@ -1,21 +1,22 @@
-version: '2'
-
 services:
-  ps-backend-app:
-    image: 'rhoopoe/personal-site:latest'
+  blog-app:
+    image: 'rhoopoe/blog-site:latest'
     build:
-      context: ./
-    container_name: ps-backend-app
+      dockerfile: ./Dockerfile
+    container_name: blog-app
     depends_on:
-      - ps-backend-db
+      - blog-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ps-backend-db:5432/compose-postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://blog-db:5432/compose-postgres
       - SPRING_DATASOURCE_USERNAME=compose-postgres
       - SPRING_DATASOURCE_PASSWORD=compose-postgres
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-  ps-backend-db:
+    ports:
+      - "8080:8080"
+
+  blog-db:
     image: 'postgres:15-alpine'
-    container_name: ps-backend-db
+    container_name: blog-db
     environment:
       - POSTGRES_USER=compose-postgres
       - POSTGRES_PASSWORD=compose-postgres
