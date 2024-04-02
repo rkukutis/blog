@@ -24,8 +24,8 @@ public class SecurityFilters {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
-                .authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers("/auth/**").permitAll()
+                .authorizeHttpRequests(authorize -> authorize
+                                .requestMatchers("/auth/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"uploads/images/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "posts/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "messages").anonymous()

@@ -3,9 +3,6 @@ logging:
         org:
             springframework:
                 security: TRACE
-server:
-    error:
-        include-message: always
 spring:
     datasource:
         password: jIOHohfdoiHIAD445_jds#LLd
