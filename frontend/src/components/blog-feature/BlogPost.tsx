@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import formatDate from "../../utils/formatDate";
 import articleIcon from "../../assets/button-icons/article_FILL0_wght400_GRAD0_opsz24.svg";
 import { PostProps } from "./BlogTypes";
-import stringToPostTheme from "../../utils/stringToPostTheme";
 
 function BlogPost({ post }: { post: PostProps }) {
   return (
@@ -20,8 +19,8 @@ function BlogPost({ post }: { post: PostProps }) {
         </div>
         <div className="items-center flex space-x-3 flex-wrap">
           {post.themes.map((theme) => (
-            <h3 key={theme} className=" text-slate-50 mt-1 rounded-md px-2 py-1" style={{ background: stringToPostTheme(theme).color }}>
-              {`${stringToPostTheme(theme).emoji} ${theme.charAt(0).toUpperCase() + theme.slice(1).toLocaleLowerCase()}`}
+            <h3 key={theme.id} className={`text-slate-50 mt-1 rounded-md px-2 py-1`} style={{ background: theme.colorHex }}>
+              {theme.name}
             </h3>
           ))}
         </div>

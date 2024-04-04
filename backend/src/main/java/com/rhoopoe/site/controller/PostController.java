@@ -36,31 +36,29 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Post>> getAllPosts(@RequestParam(defaultValue = "1") @Min(1) Integer page,
-                                                  @RequestParam(defaultValue = "10") @Min(1) Integer limit,
+    public ResponseEntity<Page<Post>> getAllPosts(@RequestParam(defaultValue = "1") @Min(0) Integer page,
+                                                  @RequestParam(defaultValue = "10") @Min(0) Integer limit,
                                                   @RequestParam(defaultValue = "createdAt") String sortBy,
                                                   @RequestParam(defaultValue = "false") boolean sortDesc,
                                                   @RequestParam(required = false) String contains){
-        // caller assumes pages start at 1, while the first page is actually 0
-        page--;
         Direction direction = sortDesc ? Direction.DESC : Direction.ASC;
         Sort sort = Sort.by(direction, sortBy);
         PageRequest pageRequest = PageRequest.of(page, limit, sort);
         return ResponseEntity.ok().body(postService.getAllPosts(pageRequest, contains));
     }
+
+    // TODO: create post endpoint should receive multipart request
     @PostMapping
     public ResponseEntity<Post> createPost(@RequestBody @Valid PostDTO postDTO) throws IOException,
             ImageProcessingException {
-        Post post = PostMapper.dtoToEntity(postDTO);
-        byte[] thumbnailBytes = Base64.getDecoder().decode(postDTO.getThumbnailBase64());
-        Post createdPost = postService.createPost(post, thumbnailBytes);
+        Post createdPost = postService.createPost(postDTO);
         return ResponseEntity.created(URI.create(createdPost.getUuid().toString())).body(createdPost);
     }
     @PutMapping("{uuid}")
     public ResponseEntity<Post> updatePost(@RequestBody @Valid PostDTO postDTO,
                                            @PathVariable UUID uuid) throws IOException, ImageProcessingException {
-        byte[] thumbnailBytes = Base64.getDecoder().decode(postDTO.getThumbnailBase64());
-        return ResponseEntity.ok().body(postService.updatePost(PostMapper.dtoToEntity(postDTO), uuid, thumbnailBytes));
+        Post updatedPost = postService.updatePost(postDTO, uuid);
+        return ResponseEntity.ok().body(updatedPost);
     }
     @DeleteMapping("{uuid}")
     public ResponseEntity<String> deletePost(@PathVariable UUID uuid) throws IOException, PostNotFoundException {

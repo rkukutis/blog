@@ -4,11 +4,13 @@ logging:
             springframework:
                 security: TRACE
 spring:
+    h2:
+        console.enabled: true
     datasource:
-        password: jIOHohfdoiHIAD445_jds#LLd
-        url: jdbc:postgresql://localhost:5432/personal_site
-        username: rhoopoe
-        driver-class-name: org.postgresql.Driver
+        url: jdbc:h2:mem:database
+        username: sa
+        password: password
+        driverClassName: org.h2.Driver
     servlet:
         multipart:
             max-file-size: 20MB
@@ -16,12 +18,7 @@ spring:
     jpa:
         hibernate:
             ddl-auto: create-drop
-        properties:
-            hibernate:
-                format_sql: true
-        show-sql: true
-        database: postgresql
-        database-platform: org.hibernate.dialect.PostgreSQLDialect
+        database: h2
 app:
     constants:
         file-root: src/main/resources

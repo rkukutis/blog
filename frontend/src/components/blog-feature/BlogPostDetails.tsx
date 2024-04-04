@@ -32,7 +32,7 @@ export function BlogPostDetails() {
   if (!post) return;
 
   return (
-    <div className="bg-slate-100 flex flex-col items-center">
+    <div className="bg-white flex flex-col items-center">
       {isFetching ? (
         <ClipLoader />
       ) : (
@@ -55,7 +55,7 @@ export function BlogPostDetails() {
                   initialFieldValues={{
                     title: post.title,
                     subtitle: post.subtitle,
-                    themes: post.themes.map((s) => s.toLowerCase()),
+                    themes: post.themes,
                     body: post.body,
                     thumbnail: post.thumbnail
                   }}

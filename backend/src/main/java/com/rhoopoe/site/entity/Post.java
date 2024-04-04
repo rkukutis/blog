@@ -1,10 +1,8 @@
 package com.rhoopoe.site.entity;
 
 
-import com.rhoopoe.site.enumerated.PostTheme;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -13,14 +11,14 @@ import java.util.*;
 @Entity
 @Table(name = "posts")
 @Getter
+@Builder
 @NoArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class Post{
 
 
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
 
     @NonNull
@@ -41,11 +39,13 @@ public class Post{
     @Setter
     private String thumbnail;
 
-    @ElementCollection(targetClass = PostTheme.class)
-    @JoinTable(name = "post_themes", joinColumns = @JoinColumn(name = "id"))
-    @Column(name = "themes", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Set<PostTheme> themes = new HashSet<>();
+    @ManyToMany
+    @Setter
+    @JoinTable(name = "post_themes",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "theme_id")
+    )
+    private Set<Theme> themes;
 
     @CreatedDate
     @Column(name = "created_at")
@@ -63,10 +63,6 @@ public class Post{
     @PreUpdate
     public void modifiedAt(){
         this.modifiedAt = new Date();
-    }
-
-    public void setThemes(Set<PostTheme> themes) {
-        this.themes = themes;
     }
 
     @Override

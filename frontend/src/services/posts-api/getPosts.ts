@@ -2,7 +2,7 @@ import { PostsAPIResponse } from "../../components/blog-feature/BlogTypes";
 import { Pagination } from "../../pages/Blog";
 
 export default async function getPosts({
-  page = 1,
+  page = 0,
   limit = 10,
   sortBy = "createdAt",
   sortDesc = "true",

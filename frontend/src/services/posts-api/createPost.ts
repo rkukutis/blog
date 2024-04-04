@@ -1,9 +1,10 @@
 import getTokenFromStorage from "../../utils/getTokenFromStorage";
+import { PostTheme } from "../themes-api/getThemes";
 
 interface Post {
   title: string;
   subtitle: string;
-  themes: string[];
+  themes: PostTheme[];
   body: string;
   thumbnail: string;
 }

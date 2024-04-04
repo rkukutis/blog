@@ -21,7 +21,7 @@ export default function Button({ children, type = styles.normal, onclick, extraS
   }
 
   return (
-    <button disabled={disabled} onClick={onclick} className={style + ` ${extraStyle} ${disabled && modifiers.disabled}`}>
+    <button type="button" disabled={disabled} onClick={onclick} className={style + ` ${extraStyle} ${disabled && modifiers.disabled}`}>
       {children}
     </button>
   );
