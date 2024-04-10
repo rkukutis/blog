@@ -18,7 +18,7 @@ spring:
             max-request-size: 20MB
     jpa:
         hibernate:
-            ddl-auto: create-drop
+            ddl-auto: update
         properties:
             hibernate:
                 format_sql: true
@@ -27,7 +27,7 @@ spring:
         database-platform: org.hibernate.dialect.PostgreSQLDialect
 app:
     constants:
-        file-root: src/main/resources
+        file-root: /blog-data
         image-location:
             post-picture: /images/post-pictures
             thumbnail: /images/thumbnails
