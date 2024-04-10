@@ -1,10 +1,11 @@
 import getTokenFromStorage from "../../utils/getTokenFromStorage";
+import { PostTheme } from "../themes-api/getThemes";
 
 interface PostUpdate {
   title: string;
   subtitle: string;
   body: string;
-  themes: string[];
+  themes: PostTheme[];
   uuid: string;
   thumbnail?: string;
 }

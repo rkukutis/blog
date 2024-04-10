@@ -1,10 +1,13 @@
 package com.rhoopoe.site.service;
 
+import com.rhoopoe.site.dto.requests.PostDTO;
 import com.rhoopoe.site.entity.Post;
+import com.rhoopoe.site.entity.Theme;
 import com.rhoopoe.site.enumerated.image.ImageRole;
 import com.rhoopoe.site.exception.ImageProcessingException;
 import com.rhoopoe.site.exception.PostNotFoundException;
 import com.rhoopoe.site.repository.PostRepository;
+import com.rhoopoe.site.repository.ThemeRepository;
 import com.rhoopoe.site.service.imagestorage.ImageFileStorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +18,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Base64;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -23,6 +29,7 @@ import java.util.UUID;
 public class PostService {
     private final PostRepository postRepository;
     private final ImageFileStorageService imageFileStorageService;
+    private final ThemeRepository themeRepository;
 
     public Post getPostById(UUID postUUID) throws PostNotFoundException {
         return postRepository.findById(postUUID).orElseThrow(()-> new PostNotFoundException(postUUID));
@@ -37,19 +44,29 @@ public class PostService {
     }
 
     @CacheEvict(value = "posts", allEntries = true)
-    public Post createPost(Post post, byte[] thumbnail) throws IOException, ImageProcessingException {
-        // 1) save post without thumbnail
-        Post savedPost = postRepository.save(post);
-        // 2) process thumbnail
-        String thumbnailPath = processThumbnail(thumbnail, savedPost);
-        // 3) update saved post with path to thumbnail
-        savedPost.setThumbnail(thumbnailPath);
+    public Post createPost(PostDTO postDTO) throws IOException, ImageProcessingException {
+        UUID newPostId = UUID.randomUUID();
+        // 1) process thumbnail
+        byte[] thumbnailBytes = Base64.getDecoder().decode(postDTO.getThumbnailBase64());
+        String thumbnailPath = processThumbnail(thumbnailBytes, newPostId);
+        // 2) create post
+        Post newPost = Post.builder()
+                .uuid(newPostId)
+                .thumbnail(thumbnailPath)
+                .title(postDTO.getTitle())
+                .subtitle(postDTO.getSubtitle())
+                .body(postDTO.getBody())
+                .themes(postDTO.getThemes())
+                .build();
+        Post savedPost = postRepository.save(newPost);
         log.debug("Post {} created", savedPost.getUuid());
-        return postRepository.save(savedPost);
+        return savedPost;
     }
+
     @CacheEvict(value = "posts", allEntries = true)
-    public Post updatePost(Post updatedPost, UUID postUUID, byte[] thumbnailBytes) throws IOException,
+    public Post updatePost(PostDTO updatedPost, UUID postUUID) throws IOException,
             ImageProcessingException {
+        byte[] thumbnailBytes = Base64.getDecoder().decode(updatedPost.getThumbnailBase64());
         Post postToBeUpdated = postRepository.getReferenceById(postUUID);
         postToBeUpdated.setTitle(updatedPost.getTitle());
         postToBeUpdated.setSubtitle(updatedPost.getSubtitle());
@@ -58,7 +75,7 @@ public class PostService {
         // Delete old thumbnail and process new one if new base64 thumbnail is provided
         if (thumbnailBytes.length != 0) {
             imageFileStorageService.delete(postToBeUpdated.getUuid().toString() + ".png", ImageRole.THUMBNAIL);
-            String newThumbnailPath = processThumbnail(thumbnailBytes, postToBeUpdated);
+            String newThumbnailPath = processThumbnail(thumbnailBytes, postToBeUpdated.getUuid());
             postToBeUpdated.setThumbnail(newThumbnailPath);
         }
         return postRepository.save(postToBeUpdated);
@@ -74,10 +91,10 @@ public class PostService {
         }
         imageFileStorageService.delete(postID + ".png", ImageRole.THUMBNAIL);
     }
-    private String processThumbnail(byte[] thumbnailBytes, Post post) throws IOException, ImageProcessingException {
+    private String processThumbnail(byte[] thumbnailBytes, UUID postId) throws IOException, ImageProcessingException {
         StringBuilder thumbnailPath = new StringBuilder();
         thumbnailPath.append(imageFileStorageService.store(thumbnailBytes,
-                post.getUuid().toString() + ".png", ImageRole.THUMBNAIL));
+                postId + ".png", ImageRole.THUMBNAIL));
         return thumbnailPath.toString();
     }
 

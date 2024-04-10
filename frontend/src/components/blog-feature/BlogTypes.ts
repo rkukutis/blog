@@ -1,10 +1,11 @@
 import { Pagination } from "../../pages/Blog";
+import { PostTheme } from "../../services/themes-api/getThemes";
 
 export interface PostProps {
   uuid: string;
   title: string;
   subtitle: string;
-  themes: string[];
+  themes: PostTheme[];
   body: string;
   thumbnail: string;
   createdAt: string;
@@ -22,7 +23,7 @@ export interface PaginationSettingsProps {
 
 export interface PostFormProps {
   closeForm: () => void;
-  initialFieldValues?: { body: string; thumbnail: string; themes: string[]; subtitle: string; title: string };
+  initialFieldValues?: { body: string; thumbnail: string; themes: PostTheme[]; subtitle: string; title: string };
   method?: string;
   postId?: string;
 }
@@ -30,7 +31,7 @@ export interface PostFormProps {
 export interface PostFormsFields {
   title: string;
   subtitle: string;
-  themes: string[];
+  themes: PostTheme[];
   body: string;
   thumbnail: FileList;
 }
@@ -45,10 +46,4 @@ export interface PostsAPIResponse {
   number: number;
   numberOfElements: number;
   empty: boolean;
-}
-
-export interface PostTheme {
-  name: string;
-  color: string;
-  emoji: string;
 }

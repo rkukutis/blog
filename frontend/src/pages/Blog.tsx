@@ -13,7 +13,7 @@ export interface Pagination {
 }
 
 const defaultPagination: Pagination = {
-  page: 1,
+  page: 0,
   limit: 10,
   sortBy: "createdAt",
   sortDesc: "true"
@@ -27,24 +27,6 @@ export default function Blog() {
   });
   if (!data) return;
   const pageNotFull = data.numberOfElements < data.size;
-
-  // const [searchParams, setSearchParams] = useSearchParams();
-
-  // useEffect(
-  //   function () {
-  //     setSearchParams((params: URLSearchParams): URLSearchParamsInit => {
-  //       params.set("page", `${pagination.page}`);
-  //       params.set("limit", `${pagination.limit}`);
-  //       params.set("sortBy", `${pagination.sortBy}`);
-  //       params.set("sortDesc", `${pagination.sortDesc}`);
-  //       if (pagination.contains !== undefined) {
-  //         params.set("contains", `${pagination.contains}`);
-  //       }
-  //       return params;
-  //     });
-  //   },
-  //   [pagination.page, pagination.limit, pagination.sortBy, pagination.sortDesc, pagination.contains, setSearchParams]
-  // );
   if (!data) return;
 
   return (

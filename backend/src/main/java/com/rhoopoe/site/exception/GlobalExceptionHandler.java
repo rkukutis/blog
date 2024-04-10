@@ -13,9 +13,8 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.AccessDeniedException;
 import java.nio.file.NoSuchFileException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 @RestControllerAdvice
@@ -38,11 +37,20 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(detail);
     }
     @ExceptionHandler({MethodArgumentNotValidException.class})
-    public ResponseEntity<ProblemDetail> handle(MethodArgumentNotValidException exception, WebRequest request){
+    public ResponseEntity<ProblemDetail> handle(MethodArgumentNotValidException exception){
         ProblemDetail detail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         detail.setTitle("Request data field constraint violation");
         detail.setStatus(HttpStatus.BAD_REQUEST);
         detail.setDetail(Objects.requireNonNull(exception.getDetailMessageArguments())[1].toString());
+        return ResponseEntity.badRequest().body(detail);
+    }
+
+    @ExceptionHandler({AccountException.class})
+    public ResponseEntity<ProblemDetail> handle(AccessDeniedException exception){
+        ProblemDetail detail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        detail.setTitle("Account exception");
+        detail.setStatus(HttpStatus.BAD_REQUEST);
+        detail.setDetail(exception.getLocalizedMessage());
         return ResponseEntity.badRequest().body(detail);
     }
 
@@ -51,6 +59,4 @@ public class GlobalExceptionHandler {
         log.error("NOT FOUND: " + exception.getLocalizedMessage());
         return ResponseEntity.notFound().build();
     }
-
-
 }
